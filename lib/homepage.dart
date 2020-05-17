@@ -111,7 +111,7 @@ class _HomePageState extends State<HomePage> {
             width:MediaQuery.of(context).size.width,
             height: 200.0,
             decoration: BoxDecoration(
-              image: DecorationImage(fit: BoxFit.fill,image: AssetImage('assets/gift.jpg'))
+              image: DecorationImage(fit: BoxFit.fill,image: AssetImage('assets/gift.jpg')),
             ),
            ),
           ]
