@@ -107,12 +107,18 @@ class _HomePageState extends State<HomePage> {
               image: DecorationImage(fit: BoxFit.fill,image: AssetImage('assets/jns1.jpg'))
             ),
            ),
-           Container(
-            width:MediaQuery.of(context).size.width,
-            height: 200.0,
-            decoration: BoxDecoration(
-              image: DecorationImage(fit: BoxFit.fill,image: AssetImage('assets/gift.jpg')),
-            ),
+           Stack(
+              children:<Widget>[ Container(
+              width:MediaQuery.of(context).size.width,
+              height: 200.0,
+              decoration: BoxDecoration(
+                image: DecorationImage(fit: BoxFit.fill,image: AssetImage('assets/gift.jpg')),
+              ),
+             ),
+             Text(' Free \n Delivery \n On \n All \n Products',
+             style: TextStyle(fontFamily: 'Montserrat',fontSize: 30.0,fontWeight: FontWeight.w600,color: Colors.black.withOpacity(0.556)),
+             )
+            ]
            ),
           ]
           )
