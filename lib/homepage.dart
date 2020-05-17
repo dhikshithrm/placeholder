@@ -59,9 +59,9 @@ class _HomePageState extends State<HomePage> {
                         child: Text('DR',
                           style: TextStyle(
                             color: Colors.orangeAccent
-                            )
+                            ),
                            ),
-                         )
+                         ),
                        ),
                       )
                       ],
