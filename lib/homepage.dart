@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> {
               ),
              ),
              Text(' Free \n Delivery \n On \n All \n Products',
-             style: TextStyle(fontFamily: 'Montserrat',fontSize: 30.0,fontWeight: FontWeight.w600,color: Colors.black.withOpacity(0.556)),
+             style: TextStyle(fontFamily: 'Montserrat',foreground:Paint()..shader = LinearGradient(colors: [Colors.blueAccent[400],Colors.black.withOpacity(0.556)]).createShader(Rect.fromLTWH(0.0, 0.0, 150.0, 50.0)),fontSize: 30.0,fontWeight: FontWeight.w600,),
              )
             ]
            ),
