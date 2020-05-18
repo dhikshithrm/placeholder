@@ -19,6 +19,10 @@ class _HomePageState extends State<HomePage> {
     'assets/images/watches.png'
   ];
 
+  List<String> tile = ['Home','Shop By Category','Your Orders','Wishlist','Best Sellers','My Coupons','Profile','Sign Out','About Us','Contact Us'
+  ,'Customer Service',
+  ];
+
   void nextSet(){
     setState(() {
       photoIndex= (photoIndex+1)%3;
@@ -38,7 +42,7 @@ class _HomePageState extends State<HomePage> {
         child: ListView(
           children: <Widget>[
             Container(
-              height: 84.0,
+              height: 78.0,
               decoration: BoxDecoration(
                 gradient: LinearGradient(colors: [Color(0xFAA80000),Colors.redAccent])
               ),
@@ -63,7 +67,28 @@ class _HomePageState extends State<HomePage> {
                            ),
                          ),
                        ),
-                      )
+                      ),
+                      Container(
+                        // decoration: BoxDecoration(
+                        //   image: DecorationImage(image: AssetImage('assets/images/tilebg.jpg'),fit: BoxFit.fitHeight)
+                        // ),
+                        child: Column(
+                         children: tile.map((e) => Padding(
+                           padding: const EdgeInsets.fromLTRB(0.0,4.5,0.0,4.5),
+                           child: ListTile(
+                              onTap: (){},
+                              title: Text('$e',
+                              style: GoogleFonts.cabin(
+                                textStyle: Theme.of(context).textTheme.display1,
+                                fontSize: 20,
+                                // color: Colors.white70,
+                                fontWeight: FontWeight.w500,
+                              )
+                              )
+                             ),
+                         ),
+                         ).toList())
+                          )
                       ],
                      )
                     ),
@@ -132,6 +157,7 @@ class _HomePageState extends State<HomePage> {
              child: IconButton(icon: Icon(Icons.arrow_left), onPressed: prevSet,splashColor: Colors.transparent)
             ),
           Container(
+            color: Colors.white,
             height: 71.5,
             child: Row(
               children: photos.sublist(photoIndex,photoIndex+3).map((e) => Container(
