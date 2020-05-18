@@ -129,7 +129,7 @@ class _HomePageState extends State<HomePage> {
             width:MediaQuery.of(context).size.width,
             height: 200.0,
             decoration: BoxDecoration(
-              image: DecorationImage(fit: BoxFit.fill,image: AssetImage('assets/jns1.jpg'))
+              image: DecorationImage(fit: BoxFit.fill,image: AssetImage('assets/jns2.jpg'))
             ),
            ),
            Stack(
@@ -137,7 +137,7 @@ class _HomePageState extends State<HomePage> {
               width:MediaQuery.of(context).size.width,
               height: 200.0,
               decoration: BoxDecoration(
-                image: DecorationImage(fit: BoxFit.fill,image: AssetImage('assets/gift.jpg')),
+                image: DecorationImage(fit: BoxFit.fill,image: AssetImage('assets/images/gift.jpg')), 
               ),
              ),
              Text(' Free \n Delivery \n On \n All \n Products',
@@ -167,6 +167,7 @@ class _HomePageState extends State<HomePage> {
             ),
            Container(
             height: 71.5,
+            
             color: Colors.white,
             child: IconButton(icon:Icon(Icons.arrow_right), onPressed: nextSet,splashColor: Colors.transparent)
            )

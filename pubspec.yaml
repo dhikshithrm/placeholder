@@ -57,9 +57,8 @@ flutter:
     - assets/images/gifts.png
     - assets/images/teddys.png
     - assets/images/watches.png
-    - assets/jns1.jpg
-    - assets/gift.jpg
-    - assets/images/tilebg.jpg
+    - assets/jns2.jpg
+    - assets/images/gift.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
