@@ -1,4 +1,3 @@
-
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,14 +9,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int photoIndex = 0;
-
-  List<String> photos = [
+  List photos = [
     'assets/images/bouquets.png',
     'assets/images/cakes.png',
     'assets/images/gifts.png',
     'assets/images/teddys.png',
-    'assets/images/watches.png'
-  ];
+    'assets/images/watches.png',
+    'assets/images/bouquets.png',
+    'assets/images/cakes.png',
+    'assets/images/gifts.png',
+    'assets/images/teddys.png',
+    'assets/images/watches.png',];
 
   List<String> tile = ['Home','Shop By Category','Your Orders','Wishlist','Best Sellers','My Coupons','Profile','Sign Out','About Us','Contact Us'
   ,'Customer Service',
@@ -25,13 +27,13 @@ class _HomePageState extends State<HomePage> {
 
   void nextSet(){
     setState(() {
-      photoIndex= (photoIndex+1)%3;
+      photoIndex= (photoIndex+1)%6;
     });
   }
 
   void prevSet(){
     setState(() {
-      photoIndex = photoIndex>0?photoIndex-1:photoIndex+1;
+      photoIndex = photoIndex>0?photoIndex-1:5-photoIndex;
     });
   }
 
@@ -148,33 +150,38 @@ class _HomePageState extends State<HomePage> {
           ]
           )
         ),
-        Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Container(
-             height: 71.5,
-             color: Colors.white,
-             child: IconButton(icon: Icon(Icons.arrow_left), onPressed: prevSet,splashColor: Colors.transparent)
-            ),
-          Container(
-            color: Colors.white,
-            height: 71.5,
-            child: Row(
-              children: photos.sublist(photoIndex,photoIndex+3).map((e) => Container(
-              child: Image.asset('$e',width:MediaQuery.of(context).size.width/3 - 32.0,)
-              )).toList()                 
-              )
-            ),
-           Container(
-            height: 71.5,
-            
-            color: Colors.white,
-            child: IconButton(icon:Icon(Icons.arrow_right), onPressed: nextSet,splashColor: Colors.transparent)
-           )
-          ]
+        AnimatedSwitcher(
+          duration: Duration(milliseconds: 700),
+          child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Container(
+               height: 71.5,
+               color: Colors.white,
+               child: IconButton(icon: Icon(Icons.arrow_left), onPressed: prevSet,splashColor: Colors.transparent)
+              ),
+            Container(
+              color: Colors.white,
+              height: 71.5,
+              child: Row(
+                children: photos.sublist(photoIndex,photoIndex+3).map((e) => Container(
+                child: Image.asset('$e',width:MediaQuery.of(context).size.width/3 - 32.0,)
+                )).toList()                 
+                )
+              ),
+             Container(
+              height: 71.5,
+              
+              color: Colors.white,
+              child: IconButton(icon:Icon(Icons.arrow_right), onPressed: nextSet,splashColor: Colors.transparent)
+             )
+            ]
+          ),
         )
        ]
       )
     );
   }
 }
+
+
