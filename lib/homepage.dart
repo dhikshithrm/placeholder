@@ -9,7 +9,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int photoIndex = 0;
-  List photos = [
+  static List photos = [
     'assets/images/bouquets.png',
     'assets/images/cakes.png',
     'assets/images/gifts.png',
@@ -26,16 +26,29 @@ class _HomePageState extends State<HomePage> {
   ];
 
   void nextSet(){
-    setState(() {
+    setState(() {if (photoIndex == 0 || photoIndex == 5){ photoIndex++;}
       photoIndex= (photoIndex+1)%6;
     });
   }
 
   void prevSet(){
-    setState(() {
-      photoIndex = photoIndex>0?photoIndex-1:5-photoIndex;
+    setState(() {if (photoIndex == 0 ||photoIndex == 5 ){ photoIndex--;}
+      photoIndex = (photoIndex-1)%6;
     });
   }
+  
+    Widget _myAnimatedWidget(BuildContext context, {key}){
+      return Container(
+       key: ValueKey(photoIndex), 
+       color: Colors.white,
+       height: 71.5,
+        child: Row(
+        children: photos.sublist(photoIndex,photoIndex+3).map((e) => Container(
+        child: Image.asset('$e',width:MediaQuery.of(context).size.width/3 - 32.0,)
+         )).toList()                 
+         )
+        );
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -88,9 +101,9 @@ class _HomePageState extends State<HomePage> {
                               )
                               )
                              ),
-                         ),
+                           ),
                          ).toList())
-                          )
+                        )
                       ],
                      )
                     ),
@@ -150,9 +163,7 @@ class _HomePageState extends State<HomePage> {
           ]
           )
         ),
-        AnimatedSwitcher(
-          duration: Duration(milliseconds: 700),
-          child: Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(
@@ -160,24 +171,18 @@ class _HomePageState extends State<HomePage> {
                color: Colors.white,
                child: IconButton(icon: Icon(Icons.arrow_left), onPressed: prevSet,splashColor: Colors.transparent)
               ),
-            Container(
-              color: Colors.white,
-              height: 71.5,
-              child: Row(
-                children: photos.sublist(photoIndex,photoIndex+3).map((e) => Container(
-                child: Image.asset('$e',width:MediaQuery.of(context).size.width/3 - 32.0,)
-                )).toList()                 
-                )
-              ),
+            AnimatedSwitcher(
+              // transitionBuilder: ,
+              duration: Duration(milliseconds: 400),
+                child: _myAnimatedWidget(context)
+            ),
              Container(
               height: 71.5,
-              
               color: Colors.white,
               child: IconButton(icon:Icon(Icons.arrow_right), onPressed: nextSet,splashColor: Colors.transparent)
              )
             ]
           ),
-        )
        ]
       )
     );
