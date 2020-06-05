@@ -31,6 +31,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   flare_splash_screen: ^2.0.1+2
   google_fonts:
+  cloud_firestore:
   
 dev_dependencies:
   flutter_test:

@@ -173,7 +173,7 @@ class _HomePageState extends State<HomePage> {
               ),
             AnimatedSwitcher(
               // transitionBuilder: ,
-              duration: Duration(milliseconds: 400),
+              duration: Duration(milliseconds: 300),
                 child: _myAnimatedWidget(context)
             ),
              Container(
