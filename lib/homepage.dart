@@ -2,6 +2,7 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/widgets.dart';
+import 'package:its12/items/item_class.dart';
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -139,7 +140,8 @@ class _HomePageState extends State<HomePage> {
           autoplay: false,
           overlayShadow: false,
           dotBgColor: Colors.transparent,
-          dotSize: 5.0,
+          indicatorBgPadding: 5.0,
+          dotSize: 3.5,
           images: [Container(
             width:MediaQuery.of(context).size.width,
             height: 200.0,
@@ -160,6 +162,20 @@ class _HomePageState extends State<HomePage> {
              )
             ]
            ),
+           Container(
+            width:MediaQuery.of(context).size.width,
+            height: 200.0,
+            decoration: BoxDecoration(
+              image: DecorationImage(fit: BoxFit.fill,image: NetworkImage("https://images.unsplash.com/photo-1464349153735-7db50ed83c84?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"))
+            ),
+           ),
+           Container(
+            width:MediaQuery.of(context).size.width,
+            height: 200.0,
+            decoration: BoxDecoration(
+              image: DecorationImage(fit: BoxFit.fill,image: NetworkImage("https://images.unsplash.com/photo-1565608444338-315d5fbaeb5e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1355&q=80"))
+            ),
+           ),
           ]
           )
         ),
@@ -169,7 +185,8 @@ class _HomePageState extends State<HomePage> {
             Container(
                height: 71.5,
                color: Colors.white,
-               child: IconButton(icon: Icon(Icons.arrow_left), onPressed: prevSet,splashColor: Colors.transparent)
+               child: IconButton(icon: Icon(Icons.arrow_left),
+               onPressed: prevSet,splashColor: Colors.transparent)
               ),
             AnimatedSwitcher(
               // transitionBuilder: ,
@@ -179,10 +196,24 @@ class _HomePageState extends State<HomePage> {
              Container(
               height: 71.5,
               color: Colors.white,
-              child: IconButton(icon:Icon(Icons.arrow_right), onPressed: nextSet,splashColor: Colors.transparent)
+              child: IconButton(icon:Icon(Icons.arrow_right),
+              onPressed: nextSet,splashColor: Colors.transparent)
              )
             ]
           ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("What They Might Love",
+            style: GoogleFonts.lobster(
+              fontSize: 20.0,
+              fontWeight: FontWeight.w400
+             ),
+            ),
+          ),
+         Container(
+           height: 400,
+           child: Items(),
+         ),
        ]
       )
     );
