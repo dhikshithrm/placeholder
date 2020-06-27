@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:its12/pages/product_page.dart';
@@ -64,7 +65,11 @@ class Singel_prod extends StatelessWidget {
       elevation: 5.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       child: InkWell(
-          onTap: ()=> Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductDetails())),
+          onTap: ()=> Navigator.of(context).push(CupertinoPageRoute(builder: (context) => ProductDetails(prod_name: prod_name,
+          prod_picture: prod_picture,
+          prod_new_price: price,
+          prod_old_price: old_price,
+          ),)),
           child: GridTile(
           footer: Container(
             color: Colors.white,

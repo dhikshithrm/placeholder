@@ -211,7 +211,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
          Container(
-           height: 400,
+           height: 380,
            child: Items(),
          ),
        ]
