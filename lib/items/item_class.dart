@@ -33,6 +33,30 @@ class _ItemsState extends State<Items> {
      "old_price": 450,
      "price": 399
    },
+   {
+     "name":"Flower Bouquet",
+     "picture": "assets/Products/flowerbouquet.jpg",
+     "old_price": 450,
+     "price": 399
+   },
+   {
+     "name":"Chocolate",
+     "picture": "assets/Products/silkoreo.jpg",
+     "old_price": 450,
+     "price": 399
+   },
+   {
+     "name":"Customized Printed t-shirt",
+     "picture": "assets/Products/tshirt.jpg",
+     "old_price": 450,
+     "price": 399
+   },
+   {
+     "name":"Customized Printed Pillow",
+     "picture": "assets/Products/pillow.jpg",
+     "old_price": 450,
+     "price": 399
+   },
   ];
   @override
   Widget build(BuildContext context) {
@@ -77,19 +101,19 @@ class Singel_prod extends StatelessWidget {
               padding: const EdgeInsets.all(3.0),
               child: Column(
                 children: <Widget>[
-                  Text(prod_name,maxLines: 1,style: TextStyle(fontWeight: FontWeight.bold),
+                  Text(prod_name,style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text("₹$old_price",style: TextStyle(
                         fontWeight: FontWeight.w400,
-                        color: Colors.red,decoration: TextDecoration.lineThrough
+                        color: Color(0xFAB30000),decoration: TextDecoration.lineThrough
                        ),
                       ),
                       SizedBox(width: 5.0,),
                       Text("₹$price",style: TextStyle(
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.bold,
                         color: Colors.black54,
                       ),
                      ),

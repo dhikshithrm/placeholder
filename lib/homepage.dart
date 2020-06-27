@@ -203,7 +203,7 @@ class _HomePageState extends State<HomePage> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text("What They Might Love",
+            child: Text("They Might Love",
             style: GoogleFonts.lobster(
               fontSize: 20.0,
               fontWeight: FontWeight.w400
