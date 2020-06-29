@@ -31,8 +31,12 @@ class _LoginState extends State<Login> {
         isLogedin = await GoogleSignIn().isSignedIn();
         if(isLogedin){
           Navigator.pushReplacementNamed(context, '/home');
+          setState(() {
+            isLogedin = false;
+          });
         }
       }
+      
       @override
       Widget build(BuildContext context) {
         return Container(
