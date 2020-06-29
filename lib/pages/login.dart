@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 
 class Login extends StatefulWidget {
@@ -28,7 +29,7 @@ class _LoginState extends State<Login> {
           loading = true;
         });
         preferences = await SharedPreferences.getInstance();
-        isLogedin = await GoogleSignIn().isSignedIn();
+        isLogedin = await googleSignIn.isSignedIn();
         if(isLogedin){
           Navigator.pushReplacementNamed(context, '/home');
           setState(() {
@@ -36,7 +37,17 @@ class _LoginState extends State<Login> {
           });
         }
       }
-      
+
+      Future handleSignIn() async{
+        preferences = await SharedPreferences.getInstance();
+        setState(() {
+          loading = true;
+        });
+
+        GoogleSignInAccount googleUser = await googleSignIn.signIn();
+        GoogleSignInAuthentication googleSignInAuthentication = await googleUser.authentication;
+        FirebaseUser firebaseUser = await firebaseAuth.
+      }
       @override
       Widget build(BuildContext context) {
         return Container(
