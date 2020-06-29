@@ -1,11 +1,8 @@
 import 'package:carousel_pro/carousel_pro.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/widgets.dart';
 import 'package:its12/items/item_class.dart';
-import 'package:its12/pages/cart.dart';
-
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -130,9 +127,7 @@ class _HomePageState extends State<HomePage> {
                            icon: Icon(Icons.shopping_cart,
                            color: Colors.white,
                            ),
-                           onPressed: (){
-                             Navigator.push(context, CupertinoPageRoute(builder: (context)=> Cart()));
-                           }
+                           onPressed: (){}
                            )
                       ],
                     ),
@@ -215,11 +210,9 @@ class _HomePageState extends State<HomePage> {
              ),
             ),
           ),
-         Flexible(
-             child: Container(
-             height: 380,
-             child: Items(),
-           ),
+         Container(
+           height: 380,
+           child: Items(),
          ),
        ]
       )

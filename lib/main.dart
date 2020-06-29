@@ -3,8 +3,6 @@ import 'package:flare_splash_screen/flare_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flare_dart/actor.dart';
 import 'package:its12/homepage.dart';
-import 'package:its12/pages/cart.dart';
-import 'package:its12/pages/login.dart';
 void main() => runApp(MyApp());
 class MyApp extends StatefulWidget {
   @override
@@ -15,13 +13,10 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: {
-        '/home': (context) => HomePage()
-      },
       debugShowCheckedModeBanner: false,
       home: SplashScreen(
         "assets/New File 2.flr",
-        Login(),
+        HomePage(),
         startAnimation: 'its12',
         // transitionsBuilder: 
         ),
