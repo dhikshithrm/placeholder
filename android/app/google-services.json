@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "636712812402",
+    "firebase_url": "https://twelve-ccbd2.firebaseio.com",
+    "project_id": "twelve-ccbd2",
+    "storage_bucket": "twelve-ccbd2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:636712812402:android:a2aae00d9a6e0e9dda27eb",
+        "android_client_info": {
+          "package_name": "com.example.its12"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "636712812402-5svbe1tv5d7jtje0fbbi3q9aitoucnd5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.its12",
+            "certificate_hash": "ddfa19d1896e78154e092b4b8a392feb8b360428"
+          }
+        },
+        {
+          "client_id": "636712812402-77s8bg7agj1f6hje8gm447b7q7mtqgn7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBs9XEcT8bELyWvCybsUy40AgEjvp1-GuM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "636712812402-77s8bg7agj1f6hje8gm447b7q7mtqgn7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

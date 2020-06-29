@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:its12/homepage.dart';
+import 'package:its12/pages/cart.dart';
+import 'package:its12/items/cart_products.dart';
 
 class ProductDetails extends StatefulWidget {
   final prod_name;
@@ -27,7 +29,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     return Scaffold(
        appBar: AppBar(
               title: InkWell(
-                onTap: () => Navigator.of(context).push(CupertinoPageRoute(builder: (context) => HomePage())),
+                onTap: () => Navigator.of(context).pushReplacementNamed('/home'),
                   child: Image(image: AssetImage('assets/new.png'),
                   width: 105,
                   height: 110,
@@ -47,7 +49,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                  icon: Icon(Icons.shopping_cart,
                color: Colors.white,
               ),
-            onPressed: (){}
+            onPressed: (){
+               Navigator.push(context, CupertinoPageRoute(builder: (context)=> Cart()));
+            }
          )
         ],
       ),
@@ -207,7 +211,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                 child: Text("Buy Now"),
                 ),
               ),
-              IconButton(icon: Icon(Icons.add_shopping_cart), onPressed: (){},color: Color(0xFAB30000),),
+              IconButton(icon: Icon(Icons.add_shopping_cart), onPressed: (){
+                setState(() {
+                  
+                });
+              },color: Color(0xFAB30000),),
               IconButton(icon: Icon(widget.like?Icons.favorite:Icons.favorite_border), onPressed: (){setState(() {
                 widget.like = !widget.like;
               });},color: Color(0xFAB30000),)
