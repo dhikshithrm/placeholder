@@ -30,7 +30,7 @@ class _LoginState extends State<Login> {
       }
       void isSignedIn() async{
         setState(() {
-          loading = true;
+          
         });
         preferences = await SharedPreferences.getInstance();
         isLogedin = await googleSignIn.isSignedIn();
@@ -52,6 +52,7 @@ class _LoginState extends State<Login> {
         GoogleSignInAuthentication googleSignInAuthentication = await googleUser.authentication;
         final AuthCredential credential = GoogleAuthProvider.getCredential(idToken: googleSignInAuthentication.idToken, accessToken: googleSignInAuthentication.accessToken);
         FirebaseUser firebaseUser = (await firebaseAuth.signInWithCredential(credential)).user;
+
         if(firebaseUser != null){
           final QuerySnapshot result = await Firestore.instance.collection('users').where("id", isEqualTo: firebaseUser.uid).getDocuments();
           final List<DocumentSnapshot> documents = result.documents;
@@ -76,7 +77,7 @@ class _LoginState extends State<Login> {
           setState(() {
             loading = false;
           });
-
+          Navigator.of(context).pushReplacementNamed('/home');
         } 
         else{
           
@@ -150,6 +151,12 @@ class _LoginState extends State<Login> {
                   onPressed: (){
                     Navigator.of(context).pushNamed('/signuppage');
                   },
+                ),
+                Visibility(
+                  visible: loading??true,
+                  child: Container(
+                    child: CircularProgressIndicator()
+                  ),
                 )
                ],
              ),

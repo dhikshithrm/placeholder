@@ -8,7 +8,7 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
-
+  String _name;
   String _email;
   String _password;
 
@@ -22,6 +22,17 @@ class _SignupState extends State<Signup> {
              child: Column(
                mainAxisAlignment: MainAxisAlignment.center,
                children: <Widget>[
+                 TextField(
+                   decoration: InputDecoration(
+                     hintText: 'Full Name'
+                   ),
+                   onChanged: (value){
+                     setState(() {
+                       _name = value;
+                     });
+                   },
+                 ),
+                SizedBox(height: 15.0),
                  TextField(
                    decoration: InputDecoration(
                      hintText: 'Email'
@@ -52,7 +63,12 @@ class _SignupState extends State<Signup> {
                       email: _email,
                       password: _password,
                       ).then((signedInUser){
-                        UserManagemenent().storeNewUser(signedInUser, context);
+                        Map value = {
+                        "email": signedInUser.user.email,
+                        "userId": signedInUser.user.uid.toString(),
+                        "userName": _name
+                        };
+                        UserManagemenent().createUser(signedInUser.user.uid,value, context);
                       }).catchError((e){
                         AlertDialog(
                           title: Text("Error"),

@@ -3,15 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:its12/homepage.dart';
+import 'package:firebase_database/firebase_database.dart';
+
 class UserManagemenent {
-  storeNewUser(user,context){
-    Firestore.instance.collection('users').add({
-      'uid' : user.uid,
-      'email': user.email,
-    }).then((value) {
-      Navigator.of(context).pop();
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> HomePage()));
-    }).catchError((e){
+  FirebaseDatabase _database = FirebaseDatabase.instance;
+  String ref =  "users";
+  createUser(String uid,Map value,context){
+    _database.reference().child("$ref/$uid").set(value).catchError((e){
       AlertDialog(
            title: Text("Error"),
            content: Text(e),
@@ -22,5 +20,7 @@ class UserManagemenent {
          ],
        );
     });
+    Navigator.of(context).pop();
+    Navigator.of(context).pushReplacementNamed('/home');
   }
-}
+  }
