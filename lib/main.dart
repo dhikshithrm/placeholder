@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flare_dart/actor.dart';
 import 'package:its12/homepage.dart';
 import 'package:its12/pages/cart.dart';
-import 'package:its12/pages/login.dart';
+import 'package:its12/pages/login_page.dart';
+import 'package:its12/pages/signup_page.dart';
 void main() => runApp(MyApp());
 class MyApp extends StatefulWidget {
   @override
@@ -16,7 +17,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        '/home': (context) => HomePage()
+        '/home': (context) => HomePage(),
+        '/signuppage': (context) => Signup(),
+        '/loginpage': (context) => Login()
       },
       debugShowCheckedModeBanner: false,
       home: SplashScreen(

@@ -26,7 +26,7 @@ dependencies:
   flare_flutter:
   carousel_pro:
   firebase_auth: ^0.16.1
-  cloud_firestore:
+  cloud_firestore: ^0.13.4+2
   google_sign_in:
   shared_preferences: ^0.5.7+3
   fluttertoast: ^4.0.1
@@ -61,6 +61,7 @@ flutter:
     - assets/Products/tshirt.jpg
     - assets/New File 2.flr
     - assets/its12.jpg
+    - assets/glogo.png
     - assets/new.png
     - assets/images/bouquets.png
     - assets/images/cakes.png

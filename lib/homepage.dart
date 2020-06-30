@@ -1,4 +1,6 @@
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,6 +9,7 @@ import 'package:its12/items/item_class.dart';
 import 'package:its12/pages/cart.dart';
 
 class HomePage extends StatefulWidget {
+  
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -95,7 +98,15 @@ class _HomePageState extends State<HomePage> {
                          children: tile.map((e) => Padding(
                            padding: const EdgeInsets.fromLTRB(0.0,4.5,0.0,4.5),
                            child: ListTile(
-                              onTap: (){},
+                              onTap: (){
+                                switch (e) {
+                                  case "Sign Out":
+                                    FirebaseAuth.instance.signOut();
+                                    Navigator.of(context).pushReplacementNamed('/loginpage');
+                                    break;
+                                  default:
+                                }
+                              },
                               title: Text('$e',
                               style: GoogleFonts.cabin(
                                 textStyle: Theme.of(context).textTheme.display1,
