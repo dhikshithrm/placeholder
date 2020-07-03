@@ -6,9 +6,10 @@ import 'package:its12/homepage.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class UserManagemenent {
+  Firestore db = Firestore.instance;
   FirebaseDatabase _database = FirebaseDatabase.instance;
   String ref =  "users";
-  createUser(String uid,Map value,context){
+  createUser(String uid,Map value,context)async{
     _database.reference().child("$ref/$uid").set(value).catchError((e){
       AlertDialog(
            title: Text("Error"),
@@ -19,7 +20,8 @@ class UserManagemenent {
            },child: Text("Close"),)
          ],
        );
-    });
+    }
+    );
     Navigator.of(context).pop();
     Navigator.of(context).pushReplacementNamed('/home');
   }

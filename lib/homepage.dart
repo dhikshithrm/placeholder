@@ -1,10 +1,12 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:its12/items/item_class.dart';
 import 'package:its12/pages/cart.dart';
 
@@ -15,6 +17,27 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final GoogleSignIn googleSignIn = GoogleSignIn();
+  Firestore db = Firestore();
+  FirebaseDatabase _database = FirebaseDatabase.instance;
+  String name;
+  String email;
+  String photourl;
+  Future getUser()async{
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    setState((){
+      name = user.displayName;
+     email = user.email;
+     photourl = user.photoUrl;
+    });
+  }
+
+  @override
+  void initState() {
+    getUser();
+        super.initState();
+      }
+
   int photoIndex = 0;
   static List photos = [
     'assets/images/bouquets.png',
@@ -70,7 +93,7 @@ class _HomePageState extends State<HomePage> {
               ),
               padding: EdgeInsets.fromLTRB(0.0, 13.0, 0.0, 8.0),
               child: ListTile(
-                title: Text('Hello,Dhikshith',
+                title: Text('Hello,$name',
                 style: GoogleFonts.lato(
                         textStyle: Theme.of(context).textTheme.display1,
                         fontSize: 22,
@@ -80,13 +103,9 @@ class _HomePageState extends State<HomePage> {
                     ),
                     leading:
                         CircleAvatar(
-                        radius: 30.0,
+                        radius: 25.0,
                         backgroundColor: Colors.black,
-                        child: Text('DR',
-                          style: TextStyle(
-                            color: Colors.orangeAccent
-                            ),
-                           ),
+                        child: Image.network(photourl??"https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png")
                          ),
                        ),
                       ),
@@ -98,11 +117,13 @@ class _HomePageState extends State<HomePage> {
                          children: tile.map((e) => Padding(
                            padding: const EdgeInsets.fromLTRB(0.0,4.5,0.0,4.5),
                            child: ListTile(
-                              onTap: (){
+                              onTap: ()async{
                                 switch (e) {
                                   case "Sign Out":
-                                    FirebaseAuth.instance.signOut();
-                                    Navigator.of(context).pushReplacementNamed('/loginpage');
+                                    googleSignIn.disconnect();
+                                    await FirebaseAuth.instance.signOut().then((value) => 
+                                      Navigator.of(context).pushReplacementNamed('/loginpage')
+                                    );
                                     break;
                                   default:
                                 }

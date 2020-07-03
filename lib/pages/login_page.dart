@@ -21,23 +21,33 @@ class _LoginState extends State<Login> {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   SharedPreferences preferences;
   bool loading = false;
-  bool isLogedin = false; 
+  bool isLogedin_wg = false;
+  bool isLogedin_r = false;
 
   @override
   void initState() {
     isSignedIn();
         super.initState();
       }
-      void isSignedIn() async{
+ void isSignedIn() async{
         setState(() {
           
         });
         preferences = await SharedPreferences.getInstance();
-        isLogedin = await googleSignIn.isSignedIn();
-        if(isLogedin){
-          Navigator.pushReplacementNamed(context, '/home');
+       await firebaseAuth.currentUser().then((user){
+          if(user != null){
+            setState(() {
+              isLogedin_r = true;
+            });
+          }
+         });
+        
+        isLogedin_wg = await googleSignIn.isSignedIn();
+        if(isLogedin_wg || isLogedin_r){
+            Navigator.pushReplacementNamed(context, '/home');
           setState(() {
-            isLogedin = false;
+            isLogedin_wg = false;
+            isLogedin_r = false;
           });
         }
       }
@@ -77,7 +87,9 @@ class _LoginState extends State<Login> {
           setState(() {
             loading = false;
           });
-          Navigator.of(context).pushReplacementNamed('/home');
+          if(firebaseUser.displayName!=null && firebaseUser.photoUrl!=null){
+            Navigator.of(context).pushReplacementNamed('/home');
+          }
         } 
         else{
           

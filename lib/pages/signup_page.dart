@@ -63,6 +63,7 @@ class _SignupState extends State<Signup> {
                       email: _email,
                       password: _password,
                       ).then((signedInUser){
+                        
                         Map value = {
                         "email": signedInUser.user.email,
                         "userId": signedInUser.user.uid.toString(),
