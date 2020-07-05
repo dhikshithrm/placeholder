@@ -247,12 +247,14 @@ class _HomePageState extends State<HomePage> {
              ),
             ),
           ),
-         Flexible(
-             child: Container(
-             height: 380,
-             child: Items(),
-           ),
+         Container(
+           height: 700,
+           child: Items(),
          ),
+         Container(
+           height: 300,
+           color: Colors.yellow,
+         )
        ]
       )
     );
