@@ -9,6 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:its12/items/item_class.dart';
 import 'package:its12/pages/cart.dart';
+import 'package:its12/services/category_services.dart';
 
 class HomePage extends StatefulWidget {
   
@@ -18,7 +19,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GoogleSignIn googleSignIn = GoogleSignIn();
-  Firestore db = Firestore();
+  List mainCategories;
+  Firestore db = Firestore.instance;
   FirebaseDatabase _database = FirebaseDatabase.instance;
   String name;
   String email;
@@ -34,6 +36,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    Category_services().getCategories()
+    .then((QuerySnapshot value){
+      if(value.documents.isNotEmpty){
+        mainCategories = value.documents;
+      }
+    });
     getUser();
         super.initState();
       }
@@ -240,6 +248,24 @@ class _HomePageState extends State<HomePage> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
+            child: Text("Categories",
+            style:TextStyle(
+              fontSize:20.0 
+             )
+            ),
+          ),
+          Container(
+            height: 500,
+            child: GridView.builder(
+              itemCount: 6,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+              itemBuilder: (BuildContext context,index){
+                return Category(index: index, mainCategories: mainCategories,);
+              }
+              )
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12.0,8.0,8.0,12.0),
             child: Text("They Might Love",
             style: GoogleFonts.lobster(
               fontSize: 20.0,
@@ -247,18 +273,60 @@ class _HomePageState extends State<HomePage> {
              ),
             ),
           ),
-         Container(
-           height: 700,
-           child: Items(),
-         ),
-         Container(
-           height: 300,
-           color: Colors.yellow,
-         )
-       ]
-      )
-    );
-  }
-}
-
+          Container(
+             height: 550,
+             child: Items(),
+             ),
+           ]
+          )
+         );
+        }
+       }
+   class Category extends StatefulWidget {
+     var mainCategories;
+     int index;
+     @override
+     Category({this.index,this.mainCategories});
+     createState() => _CategoryState(index,mainCategories);
+   }
+   
+   class _CategoryState extends State<Category>{
+     int index;
+     var mainCategories;
+     _CategoryState(this.index,this.mainCategories);
+     @override
+     Widget build(BuildContext context) {
+       return Expanded(
+         child: Padding(
+           padding: const EdgeInsets.all(6.0),
+           child: Stack(
+            children: <Widget>[
+               Container(
+               decoration: BoxDecoration(
+                 color: Colors.white.withOpacity(0.8),
+                 image: DecorationImage(image: NetworkImage(widget.mainCategories[index].data["Images"][0]),fit: BoxFit.cover, ),
+                 borderRadius: BorderRadius.circular(10)
+               ),
+             ),
+             Container(
+               decoration: BoxDecoration(
+                 borderRadius: BorderRadius.circular(10),
+                 color: Colors.black45
+               ),
+               child: Center(
+                 child: Text(widget.mainCategories[index].data['category'],
+                 textAlign: TextAlign.center,
+                 style: TextStyle(
+                   color: Colors.white,
+                   fontSize: 20,
+                   fontWeight: FontWeight.w800
+                ),
+               ),
+               )
+             )
+             ]
+           ),
+         ));
+     }
+   }
 
