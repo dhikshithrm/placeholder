@@ -257,7 +257,7 @@ class _HomePageState extends State<HomePage> {
           Container(
             height: 500,
             child: GridView.builder(
-              itemCount: 6,
+              itemCount: mainCategories.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
               itemBuilder: (BuildContext context,index){
                 return Category(index: index, mainCategories: mainCategories,);
