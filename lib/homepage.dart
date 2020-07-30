@@ -19,10 +19,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GoogleSignIn googleSignIn = GoogleSignIn();
-  List mainCategories;
   Firestore db = Firestore.instance;
   FirebaseDatabase _database = FirebaseDatabase.instance;
   String name;
+  int itemlen;
+  List<Map<String, dynamic>> categoryItems;
+  Category_services category_services = Category_services();
   String email;
   String photourl;
   Future getUser()async{
@@ -36,12 +38,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    Category_services().getCategories()
-    .then((QuerySnapshot value){
-      if(value.documents.isNotEmpty){
-        mainCategories = value.documents;
-      }
-    });
+    categoryItems = category_services.getCategories();
+    print(categoryItems.length);
     getUser();
         super.initState();
       }
@@ -255,12 +253,12 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Container(
-            height: 500,
-            child: GridView.builder(
-              itemCount: mainCategories.length,
+             height: 550,
+             child: GridView.builder(
+              itemCount: categoryItems.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
               itemBuilder: (BuildContext context,index){
-                return Category(index: index, mainCategories: mainCategories,);
+                return Category(index: index, mainCategories: categoryItems,);
               }
               )
           ),
@@ -304,7 +302,7 @@ class _HomePageState extends State<HomePage> {
                Container(
                decoration: BoxDecoration(
                  color: Colors.white.withOpacity(0.8),
-                 image: DecorationImage(image: NetworkImage(widget.mainCategories[index].data["Images"][0]),fit: BoxFit.cover, ),
+                 image: DecorationImage(image: NetworkImage(widget.mainCategories[index]["Images"][0]),fit: BoxFit.cover, ),
                  borderRadius: BorderRadius.circular(10)
                ),
              ),
@@ -314,7 +312,7 @@ class _HomePageState extends State<HomePage> {
                  color: Colors.black45
                ),
                child: Center(
-                 child: Text(widget.mainCategories[index].data['category'],
+                 child: Text(widget.mainCategories[index]['category'],
                  textAlign: TextAlign.center,
                  style: TextStyle(
                    color: Colors.white,

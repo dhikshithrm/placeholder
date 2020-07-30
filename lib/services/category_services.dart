@@ -1,9 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Category_services{
-  Future<QuerySnapshot> getCategories(){
-    return Firestore.instance
+  List<Map<String, dynamic>> getCategories(){
+    List<Map<String, dynamic>> categories = [];
+    Firestore.instance
            .collection('categories')
-           .getDocuments();
+           .getDocuments().then((value){
+             value.documents.forEach((e) {
+               categories.add(e.data);
+             });
+           });
+    return categories;
   }
 }
