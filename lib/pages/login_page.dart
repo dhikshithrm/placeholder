@@ -100,16 +100,13 @@ class _LoginState extends State<Login> {
         return Scaffold(
          body: Center(
            child: Container(
-            //  decoration: BoxDecoration(image: 
-            //  DecorationImage(image: NetworkImage('https://images.unsplash.com/photo-1542394866-4c4bd038f483?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60'),
-            //  fit: BoxFit.cover
-            //  )),
              padding: EdgeInsets.all(25.0),
              child: Column(
                mainAxisAlignment: MainAxisAlignment.center,
                children: <Widget>[
                  TextField(
                    decoration: InputDecoration(
+                     border: OutlineInputBorder(),
                      hintText: 'Email'
                    ),
                    onChanged: (value){
@@ -120,7 +117,10 @@ class _LoginState extends State<Login> {
                  ),
                 SizedBox(height: 15.0),
                 TextField(
-                  decoration: InputDecoration(hintText: "Password"),
+                  decoration: InputDecoration(
+                    hintText: "Password",
+                    border: OutlineInputBorder(),
+                    ),
                   onChanged: (value){
                     setState(() {
                       _password = value;

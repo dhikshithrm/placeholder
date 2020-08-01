@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
   Future getUser()async{
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
     setState((){
-      name = user.displayName;
+     name = user.displayName;
      email = user.email;
      photourl = user.photoUrl;
     });

@@ -7,20 +7,13 @@ class UserManagemenent {
   Firestore db = Firestore.instance;
   FirebaseDatabase _database = FirebaseDatabase.instance;
   String ref =  "users";
-  createUser(String uid,Map value,context)async{
-    _database.reference().child("$ref/$uid").set(value).catchError((e){
-      AlertDialog(
-           title: Text("Error"),
-           content: Text(e),
-           actions: <Widget>[
-            MaterialButton(onPressed: (){
-                     Navigator.of(context).pop();
-           },child: Text("Close"),)
-         ],
-       );
-    }
-    );
+  Future createUser(context,{String name,String id,String email,String imageUrl}){
+    db.collection(ref).document(id).setData({
+      'username': name,
+      'id': id,
+      'email': email,
+      'dp': imageUrl,
+    });
     Navigator.of(context).pop();
-    Navigator.of(context).pushReplacementNamed('/home');
-  }
+    }
   }
