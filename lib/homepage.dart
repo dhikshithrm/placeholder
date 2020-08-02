@@ -39,9 +39,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     categoryItems = category_services.getCategories();
-    print(categoryItems.length);
     getUser();
-        super.initState();
+    super.initState();
       }
 
   int photoIndex = 0;

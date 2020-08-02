@@ -7,7 +7,7 @@ class UserManagemenent {
   Firestore db = Firestore.instance;
   FirebaseDatabase _database = FirebaseDatabase.instance;
   String ref =  "users";
-  Future createUser(context,{String name,String id,String email,String imageUrl}){
+  Future<void> createUser(context,{String name,String id,String email,String imageUrl}){
     db.collection(ref).document(id).setData({
       'username': name,
       'id': id,
