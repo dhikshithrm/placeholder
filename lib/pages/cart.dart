@@ -13,6 +13,7 @@ class _CartState extends State<Cart> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.black),
               title: InkWell(
                 onTap: () => Navigator.of(context).push(CupertinoPageRoute(builder: (context) => HomePage())),
                   child: Image(image: AssetImage('assets/new.png'),
@@ -21,11 +22,16 @@ class _CartState extends State<Cart> {
                  ),
               ),
                 elevation: 0.0,
-                backgroundColor: Colors.black,
+                flexibleSpace: Container(
+                  height: 90,
+                  width: double.infinity,
+                  color: Colors.black26.withOpacity(0.2),
+                ),
+                backgroundColor: Colors.transparent,
                 actions: <Widget>[
             IconButton(
               icon: Icon(Icons.search,
-                  color: Colors.white,
+                  color: Colors.black,
                   size: 30.0,
                   ),
                   onPressed: (){}

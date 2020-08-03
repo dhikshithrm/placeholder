@@ -9,7 +9,9 @@ import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:its12/items/item_class.dart';
 import 'package:its12/pages/cart.dart';
+import 'package:its12/pages/search_page.dart';
 import 'package:its12/services/category_services.dart';
+import 'package:its12/services/item_services.dart';
 
 class HomePage extends StatefulWidget {
   
@@ -24,7 +26,9 @@ class _HomePageState extends State<HomePage> {
   String name;
   int itemlen;
   List<Map<String, dynamic>> categoryItems;
+  List<Map<String, dynamic>> productItems;
   Category_services category_services = Category_services();
+  Item_services item_services = Item_services();
   String email;
   String photourl;
   Future getUser()async{
@@ -39,6 +43,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     categoryItems = category_services.getCategories();
+    productItems = item_services.getItems();
     getUser();
     super.initState();
       }
@@ -109,8 +114,8 @@ class _HomePageState extends State<HomePage> {
                     leading:
                         CircleAvatar(
                         radius: 25.0,
-                        backgroundColor: Colors.black,
-                        child: Image.network(photourl??"https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png")
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: NetworkImage(photourl),
                          ),
                        ),
                       ),
@@ -148,30 +153,45 @@ class _HomePageState extends State<HomePage> {
                       ],
                      )
                     ),
-                    appBar: AppBar(
-                      title: Image(image: AssetImage('assets/new.png'),
-                      width: 105,
-                      height: 110,
+                    appBar: PreferredSize(
+                         preferredSize: Size.fromHeight(60.0),
+                         child: AppBar(
+                        title: Center(
+                          child: Image(image: AssetImage('assets/new.png'),
+                          width: 105,
+                          height: 120,
+                          ),
+                        ),
+                        flexibleSpace: Container(
+                          height: 110,
+                          width: double.infinity,
+                          color: Colors.black26.withOpacity(0.2),
+                          ),
+                          backgroundColor: Colors.transparent,
+                        elevation: 0.0,
+                        actions: <Widget>[
+                          IconButton(
+                             icon: Icon(Icons.search,
+                             color: Colors.black,
+                             size: 30,
+                             ),
+                             onPressed: (){
+                               Navigator.of(context).push(CupertinoPageRoute(builder: (_)=> SearchPage(
+                                 searchSpace: productItems,
+                               )));
+                              }
+                             ),
+                           IconButton(
+                             icon: Icon(Icons.shopping_cart,
+                             color: Colors.black,
+                             ),
+                             onPressed: (){
+                               Navigator.push(context, CupertinoPageRoute(builder: (context)=> Cart()));
+                             }
+                             )
+                        ],
+                        iconTheme: IconThemeData(color: Colors.black),
                       ),
-                      elevation: 0.0,
-                      backgroundColor: Colors.black,
-                      actions: <Widget>[
-                        IconButton(
-                           icon: Icon(Icons.search,
-                           color: Colors.white,
-                           size: 30.0,
-                           ),
-                           onPressed: (){}
-                           ),
-                         IconButton(
-                           icon: Icon(Icons.shopping_cart,
-                           color: Colors.white,
-                           ),
-                           onPressed: (){
-                             Navigator.push(context, CupertinoPageRoute(builder: (context)=> Cart()));
-                           }
-                           )
-                      ],
                     ),
       body: ListView(
         children: <Widget>[
