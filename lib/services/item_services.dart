@@ -11,4 +11,14 @@ class Item_services{
                });
              });
       return items;
-  }}
+  }
+  Map<String,dynamic> getItemWithName(String name){
+    Map<String,dynamic> item={}; 
+    Firestore.instance
+              .collection('items')
+              .where('name', isEqualTo: name)
+              .getDocuments()
+              .then((value){item.addAll(value.documents[0].data);});
+              return item;
+  }
+  }
