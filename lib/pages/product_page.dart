@@ -69,21 +69,35 @@ class _ProductDetailsState extends State<ProductDetails> {
               ),
               footer: Container(
                 color: Colors.white70,
-                child: ListTile(
-                  leading: Text(widget.prod_name,style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15.0,
-                  ),),
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                       Text("₹${widget.prod_old_price}",style: TextStyle(
-                        color: Color(0xFAB30000),decoration: TextDecoration.lineThrough
-                      ),),
-                      SizedBox(width:10.0),
-                      Text("₹${widget.prod_new_price}",),
-                    ],
-                  ),
+                child: Column(
+                  children: <Widget>[
+                      Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(widget.prod_name,
+                          style: TextStyle(
+                            fontSize: 18.0,
+                          ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text("₹${widget.prod_new_price}",
+                        style: TextStyle(
+                          decoration: TextDecoration.lineThrough,
+                          color: Colors.red,
+                          fontSize: 18,
+                        ),
+                        ),
+                        SizedBox(width:10),
+                        Text("₹${widget.prod_new_price}",
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                        )
+                      ],
+                    )
+                  ],
                 ),
               ),  
             ),
@@ -118,9 +132,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                         Expanded(child: Text("Size")),
                         Expanded(child: Icon(Icons.arrow_drop_down)),
                       ],
+                     ),
                     ),
-                    ),
-                ),
+                   ),
                   Expanded(
                    child: MaterialButton(onPressed: (){
                       showDialog(context: context,builder: 
