@@ -102,118 +102,48 @@ class _ProductDetailsState extends State<ProductDetails> {
               ),  
             ),
           ),
-          Row(
-            children: <Widget>[
-                Expanded(
-                     child: MaterialButton(onPressed: (){
-                      showDialog(context: context,builder: 
-                      (context){
-                        return AlertDialog(
-                          title: Text("Size"),
-                          content: Text("Choose The Size"),
-                          actions: <Widget>[
-                            MaterialButton(
-                              onPressed: (){
-                                Navigator.of(context).pop();
-                              },
-                              child:  Text("close"),
-                             )
-                          ],
-                        );
-                      }
-                      );
-                    },
-                    color: Colors.white,
-                    textColor: Colors.grey,
-                     elevation: 0.2,
-                    child: Row(
+          Padding(padding: EdgeInsets.all(15.0),
+          child: GestureDetector(
+            onTap: () {
+              showDialog(context: context,builder: (BuildContext context){
+                return AlertDialog(
+                    title: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("Choose Variant",
+                          style: TextStyle(
+                            fontSize: 20.0,
+                          )),
+                        ),
+                        SizedBox(height: 13,),
+                        Divider(
+                          height: 3.0,
+                        )
+                      ],
+                    ),
+                    content: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Expanded(child: Text("Size")),
-                        Expanded(child: Icon(Icons.arrow_drop_down)),
+
                       ],
-                     ),
                     ),
-                   ),
-                  Expanded(
-                   child: MaterialButton(onPressed: (){
-                      showDialog(context: context,builder: 
-                      (context){
-                        return AlertDialog(
-                          title: Text("Color"),
-                          content: Text("Choose The Color"),
-                          actions: <Widget>[
-                            MaterialButton(
-                              onPressed: (){
-                                Navigator.of(context).pop();
-                              },
-                              child:  Text("close"),
-                             )
-                          ],
-                        );
-                      }
-                      );
-                  },
-                  color: Colors.white,
-                  textColor: Colors.grey,
-                     elevation: 0.2,
-                  child: Row(
-                      children: <Widget>[
-                        Expanded(child: Text("Color")),
-                        Expanded(child: Icon(Icons.arrow_drop_down),)
-                      ],
-                  ),
-                  ),
-                   ),
-              Expanded(
-                child: MaterialButton(onPressed: (){
-                      showDialog(context: context,builder: 
-                      (context){
-                        return AlertDialog(
-                          title: Text("Quantity"),
-                          content: Container(
-                            height: 150,
-                            child: Column(
-                              children: <Widget>[
-                                IconButton(icon: Icon(Icons.arrow_drop_up), onPressed: (){
-                                  setState(() {
-                                    widget.qnt++;
-                                  });
-                                }),
-                                IconButton(icon: Icon(Icons.arrow_drop_down), onPressed: (){
-                                  if(widget.qnt>0){
-                                  setState(() {
-                                    widget.qnt--;
-                                  });
-                                  }
-                                }),
-                              ],
-                            ),
-                          ),
-                          actions: <Widget>[
-                            MaterialButton(
-                              onPressed: (){
-                                Navigator.of(context).pop();
-                              },
-                              child:  Text("close"),
-                             )
-                          ],
-                        );
-                      }
-                    );
-                },
-                color: Colors.white,
-                textColor: Colors.grey,
-                 elevation: 0.2,
-                child: Row(
-                  children: <Widget>[
-                     Text("Qunt ${widget.qnt}"),
-                     Icon(Icons.arrow_drop_down),
-                  ],
-                ),
-                ),
+                  );
+              });
+            },
+               child: Container(
+              decoration: BoxDecoration(
+              color: Colors.black12,  
+              border: Border.all(width:1.0,color:Colors.black38),
+              borderRadius: BorderRadius.circular(7.0)
               ),
-            ],
+              child: ListTile(
+                title: Text("1/2 KG",style:TextStyle(fontSize: 18.0)),
+                subtitle: Text(widget.prod_name,overflow: TextOverflow.ellipsis,),
+                trailing: Icon(Icons.navigate_next,size: 40.0,),
+              )
+            ),
+          ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
