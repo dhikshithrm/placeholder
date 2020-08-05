@@ -10,12 +10,14 @@ class ProductDetails extends StatefulWidget {
   final prod_new_price;
   final prod_old_price;
   final prod_picture;
+  final prod_description;
   bool like = false;
   int qnt = 1;
   ProductDetails({this.prod_name,
                   this.prod_picture,
                   this.prod_new_price,
-                  this.prod_old_price
+                  this.prod_old_price,
+                  this.prod_description
                   });
 
   @override
@@ -63,7 +65,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             child: GridTile(
               child: Container(
                 color: Colors.white70,
-                child: Image.asset(widget.prod_picture,),
+                child: Image.network(widget.prod_picture,),
               ),
               footer: Container(
                 color: Colors.white70,
@@ -231,7 +233,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)."),
+            child: Text(widget.prod_description)
           ),
           Divider(thickness: 2.0,),
           Padding(
@@ -241,7 +243,7 @@ class _ProductDetailsState extends State<ProductDetails> {
               fontWeight: FontWeight.bold
             ),),),
           Container(
-            height: 350.0,
+            height: 500,
             child: Similar_products(),
           )
         ],
@@ -284,7 +286,7 @@ class _Similar_productsState extends State<Similar_products> {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      primary: true,
+      primary: false,
       itemCount: item_list.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
       itemBuilder: (BuildContext context,index){

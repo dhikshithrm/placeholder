@@ -25,8 +25,9 @@ class _HomePageState extends State<HomePage> {
   FirebaseDatabase _database = FirebaseDatabase.instance;
   String name;
   int itemlen;
-  List<Map<String, dynamic>> categoryItems;
-  List<Map<String, dynamic>> productItems;
+  bool categoryisLoading;
+  List<Map<String, dynamic>> categoryItems=[];
+  List<Map<String, dynamic>> productItems=[];
   Category_services category_services = Category_services();
   Item_services item_services = Item_services();
   String email;
@@ -42,9 +43,19 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    categoryItems = category_services.getCategories();
-    productItems = item_services.getItems();
-    getUser();
+    category_services.getCategories().then(
+      (value){
+        setState(() {
+         categoryItems = value;
+        });
+      }
+      );
+      setState(() {
+        productItems = item_services.getItems();
+        getUser();
+      });
+  
+    
     super.initState();
       }
 
@@ -165,14 +176,13 @@ class _HomePageState extends State<HomePage> {
                         flexibleSpace: Container(
                           height: 110,
                           width: double.infinity,
-                          color: Colors.black26.withOpacity(0.2),
+                          color: Colors.black,
                           ),
                           backgroundColor: Colors.transparent,
                         elevation: 0.0,
                         actions: <Widget>[
                           IconButton(
                              icon: Icon(Icons.search,
-                             color: Colors.black,
                              size: 30,
                              ),
                              onPressed: (){
@@ -183,120 +193,149 @@ class _HomePageState extends State<HomePage> {
                              ),
                            IconButton(
                              icon: Icon(Icons.shopping_cart,
-                             color: Colors.black,
                              ),
                              onPressed: (){
                                Navigator.push(context, CupertinoPageRoute(builder: (context)=> Cart()));
                              }
                              )
                         ],
-                        iconTheme: IconThemeData(color: Colors.black),
                       ),
                     ),
-      body: ListView(
-        children: <Widget>[
-        Container(
-        height: 200,
-        child: Carousel(
-          animationCurve: Curves.elasticIn,
-          autoplay: false,
-          overlayShadow: false,
-          dotBgColor: Colors.transparent,
-          indicatorBgPadding: 5.0,
-          dotSize: 3.5,
-          images: [Container(
-            width:MediaQuery.of(context).size.width,
-            height: 200.0,
-            decoration: BoxDecoration(
-              image: DecorationImage(fit: BoxFit.fill,image: AssetImage('assets/jns2.jpg'))
+              body: SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                      Container(
+                      height: 200,
+                      child: Carousel(
+                        animationCurve: Curves.elasticIn,
+                        autoplay: false,
+                        overlayShadow: false,
+                        dotBgColor: Colors.transparent,
+                        indicatorBgPadding: 5.0,
+                        dotSize: 3.5,
+                        images: [Container(
+                          width:MediaQuery.of(context).size.width,
+                          height: 200.0,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(fit: BoxFit.fill,image: AssetImage('assets/jns2.jpg'))
+                          ),
+                        ),
+                        Stack(
+                            children:<Widget>[ Container(
+                            width:MediaQuery.of(context).size.width,
+                            height: 200.0,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(fit: BoxFit.fill,image: AssetImage('assets/images/gift.jpg')), 
+                            ),
+                          ),
+                          Text(' Free \n Delivery \n On \n All \n Products',
+                          style: TextStyle(fontFamily: 'Montserrat',foreground:Paint()..shader = LinearGradient(colors: [Colors.blueAccent[400],Colors.black.withOpacity(0.556)]).createShader(Rect.fromLTWH(0.0, 0.0, 150.0, 50.0)),fontSize: 30.0,fontWeight: FontWeight.w600,),
+                          )
+                          ]
+                        ),
+                      Container(
+                        width:MediaQuery.of(context).size.width,
+                        height: 200.0,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(fit: BoxFit.fill,image: NetworkImage("https://images.unsplash.com/photo-1464349153735-7db50ed83c84?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"))
+                        ),
+                      ),
+                  Container(
+                      width:MediaQuery.of(context).size.width,
+                      height: 200.0,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(fit: BoxFit.fill,image: NetworkImage("https://images.unsplash.com/photo-1565608444338-315d5fbaeb5e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1355&q=80"))
+                      ),
+                  ),
+                  ]
+                  )
+                ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+                Container(
+                   height: 71.5,
+                   color: Colors.white,
+                   child: IconButton(icon: Icon(Icons.arrow_left),
+                   onPressed: prevSet,splashColor: Colors.transparent)
+                  ),
+                AnimatedSwitcher(
+                  // transitionBuilder: ,
+                  duration: Duration(milliseconds: 400),
+                      child: _myAnimatedWidget(context)
+                ),
+                 Container(
+                  height: 71.5,
+                  color: Colors.white,
+                  child: IconButton(icon:Icon(Icons.arrow_right),
+                  onPressed: nextSet,splashColor: Colors.transparent)
+                 )
+                ]
             ),
-           ),
-           Stack(
-              children:<Widget>[ Container(
-              width:MediaQuery.of(context).size.width,
-              height: 200.0,
-              decoration: BoxDecoration(
-                image: DecorationImage(fit: BoxFit.fill,image: AssetImage('assets/images/gift.jpg')), 
-              ),
-             ),
-             Text(' Free \n Delivery \n On \n All \n Products',
-             style: TextStyle(fontFamily: 'Montserrat',foreground:Paint()..shader = LinearGradient(colors: [Colors.blueAccent[400],Colors.black.withOpacity(0.556)]).createShader(Rect.fromLTWH(0.0, 0.0, 150.0, 50.0)),fontSize: 30.0,fontWeight: FontWeight.w600,),
-             )
-            ]
-           ),
-           Container(
-            width:MediaQuery.of(context).size.width,
-            height: 200.0,
-            decoration: BoxDecoration(
-              image: DecorationImage(fit: BoxFit.fill,image: NetworkImage("https://images.unsplash.com/photo-1464349153735-7db50ed83c84?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"))
+            Padding(
+                padding: const EdgeInsets.fromLTRB(7.3,8.0,7.3,8.0),
+                child: Container(
+                  width: double.infinity,
+                  height: 50,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5.0),
+                      color: Colors.black
+                  ),
+                  child: Center(
+                      child: Padding(padding: EdgeInsets.all(5.0),
+                        child: Text(
+                          "Categories",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500
+                          ),
+                        ),
+                      ),
+                  ),
+                ),
             ),
-           ),
-           Container(
-            width:MediaQuery.of(context).size.width,
-            height: 200.0,
-            decoration: BoxDecoration(
-              image: DecorationImage(fit: BoxFit.fill,image: NetworkImage("https://images.unsplash.com/photo-1565608444338-315d5fbaeb5e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1355&q=80"))
-            ),
-           ),
-          ]
-          )
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
             Container(
-               height: 71.5,
-               color: Colors.white,
-               child: IconButton(icon: Icon(Icons.arrow_left),
-               onPressed: prevSet,splashColor: Colors.transparent)
+              height: 600,
+                 child: GridView.builder(
+                   primary: false,
+                  itemCount: categoryItems.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                  itemBuilder: (BuildContext context,index){
+                      return Category(index: index, mainCategories: categoryItems,);
+                  }
+                  )
+            ),
+            Padding(
+                padding: const EdgeInsets.fromLTRB(12.0,8.0,8.0,12.0),
+                child: Text("They Might Love",
+                style: GoogleFonts.lobster(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w400
+                 ),
+                ),
+            ),
+            Container(
+                 height: 1000,
+                 child: GridView.builder(
+                   primary: false,
+                   itemCount: productItems.length,
+                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                   itemBuilder: (BuildContext context,index){
+                        return Singel_prod(
+                          prod_name: productItems[index]['name'],
+                          prod_picture: productItems[index]['imageUrl'],
+                          old_price: productItems[index]['old_price'],
+                          price: productItems[index]['price'],
+                          description: productItems[index]['description'],
+                        );
+                      }
+                   ),
+                 ),
+             ]
+            ),
               ),
-            AnimatedSwitcher(
-              // transitionBuilder: ,
-              duration: Duration(milliseconds: 400),
-                child: _myAnimatedWidget(context)
-            ),
-             Container(
-              height: 71.5,
-              color: Colors.white,
-              child: IconButton(icon:Icon(Icons.arrow_right),
-              onPressed: nextSet,splashColor: Colors.transparent)
-             )
-            ]
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text("Categories",
-            style:TextStyle(
-              fontSize:20.0 
-             )
-            ),
-          ),
-          Container(
-             height: 550,
-             child: GridView.builder(
-              itemCount: categoryItems.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-              itemBuilder: (BuildContext context,index){
-                return Category(index: index, mainCategories: categoryItems,);
-              }
-              )
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(12.0,8.0,8.0,12.0),
-            child: Text("They Might Love",
-            style: GoogleFonts.lobster(
-              fontSize: 20.0,
-              fontWeight: FontWeight.w400
-             ),
-            ),
-          ),
-          Container(
-             height: 550,
-             child: Items(),
-             ),
-           ]
-          )
-         );
+            );
         }
        }
    class Category extends StatefulWidget {
