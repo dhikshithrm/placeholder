@@ -106,6 +106,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       drawer: Drawer(
         child: ListView(
+          primary: true,
           children: <Widget>[
             Container(
               height: 78.0,
@@ -316,7 +317,7 @@ class _HomePageState extends State<HomePage> {
                 ),
             ),
             Container(
-                 height: 1000,
+                 height: 2000,
                  child: GridView.builder(
                    primary: false,
                    itemCount: productItems.length,
