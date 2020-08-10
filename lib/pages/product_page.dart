@@ -106,31 +106,36 @@ class _ProductDetailsState extends State<ProductDetails> {
           child: GestureDetector(
             onTap: () {
               showDialog(context: context,builder: (BuildContext context){
-                return AlertDialog(
-                    title: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text("Choose Variant",
-                          style: TextStyle(
-                            fontSize: 20.0,
-                          )),
-                        ),
-                        SizedBox(height: 13,),
-                        Divider(
-                          height: 3.0,
-                        )
-                      ],
-                    ),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-
-                      ],
-                    ),
-                  );
-              });
-            },
+                    return Dialog(
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(7.0)), //this right here
+                      child: Container(
+                        height: 350,
+                        child:  Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                height: 50,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Color(0xFAB30000),
+                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(7.0),topRight: Radius.circular(7.0))
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: <Widget>[
+                                    Text("Choose Variant",style: TextStyle(fontSize: 22),),
+                                    IconButton(icon: Icon(Icons.cancel), onPressed: (){Navigator.of(context).pop();},splashColor: Colors.transparent,)
+                                  ],
+                                   ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                        );
+                      });
+                    },
                child: Container(
               decoration: BoxDecoration(
               color: Colors.black12,  
