@@ -297,7 +297,7 @@ class _HomePageState extends State<HomePage> {
                 ),
             ),
             Container(
-              height: 600,
+              height: 620,
                  child: GridView.builder(
                    primary: false,
                   itemCount: categoryItems.length,
@@ -317,7 +317,7 @@ class _HomePageState extends State<HomePage> {
                 ),
             ),
             Container(
-                 height: 4000,
+                 height: 4200,
                  child: GridView.builder(
                    primary: false,
                    itemCount: productItems.length,
