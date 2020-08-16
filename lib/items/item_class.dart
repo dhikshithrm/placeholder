@@ -22,10 +22,10 @@ class Singel_prod extends StatelessWidget {
           ),
           child: InkWell(
               onTap: ()=> Navigator.of(context).push(CupertinoPageRoute(builder: (context) => ProductDetails(prod_name: prod_name,
-              prod_picture: prod_picture,
-              prod_new_price: price,
-              prod_old_price: old_price,
-              prod_description: description,
+                  prod_picture: prod_picture,
+                  prod_new_price: price,
+                  prod_old_price: old_price,
+                  prod_description: description,
               ),)),
               child: GridTile(
               footer: Container(

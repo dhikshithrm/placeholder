@@ -9,6 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:its12/items/item_class.dart';
 import 'package:its12/pages/cart.dart';
+import 'package:its12/pages/categoryItemsPage.dart';
 import 'package:its12/pages/search_page.dart';
 import 'package:its12/services/category_services.dart';
 import 'package:its12/services/item_services.dart';
@@ -354,36 +355,44 @@ class _HomePageState extends State<HomePage> {
      @override
      Widget build(BuildContext context) {
        return Expanded(
-         child: Padding(
-           padding: const EdgeInsets.all(6.0),
-           child: Stack(
-            children: <Widget>[
-               Container(
-               decoration: BoxDecoration(
-                 color: Colors.white.withOpacity(0.8),
-                 image: DecorationImage(image: NetworkImage(widget.mainCategories[index]["Images"][0]),fit: BoxFit.cover, ),
-                 borderRadius: BorderRadius.circular(10)
+         child: GestureDetector(
+           onTap: () {
+             Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
+               return CategoryPage(category: widget.mainCategories[index]["category"]);
+             }));
+           },
+             child: Padding(
+             padding: const EdgeInsets.all(6.0),
+             child: Stack(
+                children: <Widget>[
+                   Container(
+                   decoration: BoxDecoration(
+                     color: Colors.white.withOpacity(0.8),
+                     image: DecorationImage(image: NetworkImage(widget.mainCategories[index]["Images"][0]),fit: BoxFit.cover, ),
+                     borderRadius: BorderRadius.circular(10)
+                   ),
+                 ),
+                 Container(
+                   decoration: BoxDecoration(
+                     borderRadius: BorderRadius.circular(10),
+                     color: Colors.black45
+                   ),
+                   child: Center(
+                     child: Text(widget.mainCategories[index]['category'],
+                     textAlign: TextAlign.center,
+                     style: TextStyle(
+                       color: Colors.white,
+                       fontSize: 20,
+                       fontWeight: FontWeight.w800
+                     ),
+                    ),
+                   )
+                  )
+                 ]
                ),
              ),
-             Container(
-               decoration: BoxDecoration(
-                 borderRadius: BorderRadius.circular(10),
-                 color: Colors.black45
-               ),
-               child: Center(
-                 child: Text(widget.mainCategories[index]['category'],
-                 textAlign: TextAlign.center,
-                 style: TextStyle(
-                   color: Colors.white,
-                   fontSize: 20,
-                   fontWeight: FontWeight.w800
-                 ),
-                ),
-               )
-              )
-             ]
-           ),
-         ));
+         ),
+         );
         }
       }
 
