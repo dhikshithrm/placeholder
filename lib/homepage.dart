@@ -10,6 +10,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:its12/items/item_class.dart';
 import 'package:its12/pages/cart.dart';
 import 'package:its12/pages/categoryItemsPage.dart';
+import 'package:its12/pages/profile.dart';
 import 'package:its12/pages/search_page.dart';
 import 'package:its12/services/category_services.dart';
 import 'package:its12/services/item_services.dart';
@@ -51,14 +52,22 @@ class _HomePageState extends State<HomePage> {
         });
       }
       );
+    item_services.getItems()
+    .then((value){
       setState(() {
-        productItems = item_services.getItems();
-        getUser();
+        productItems = value;
       });
-  
-    
+    });
+    getUser();
     super.initState();
       }
+
+  @override
+  void dispose() { 
+    productItems.clear();
+    categoryItems.clear();
+    super.dispose();
+  }
 
   int photoIndex = 0;
   static List photos = [
@@ -148,7 +157,10 @@ class _HomePageState extends State<HomePage> {
                                       Navigator.of(context).pushReplacementNamed('/loginpage')
                                     );
                                     break;
-                                  default:
+                                  case "Profile":
+                                    Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
+                                      return Profilepage(name: name,email: email,photoUrl: photourl,);
+                                    }));
                                 }
                               },
                               title: Text('$e',
@@ -297,7 +309,12 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
             ),
+            categoryItems.length==0?
             Container(
+              height: 620,
+              child: Center(child: CircularProgressIndicator())
+              )
+            :Container(
               height: 620,
                  child: GridView.builder(
                    primary: false,
@@ -330,6 +347,7 @@ class _HomePageState extends State<HomePage> {
                           old_price: productItems[index]['old_price'],
                           price: productItems[index]['price'],
                           description: productItems[index]['description'],
+                          diffVariants: productItems[index]['customisable'],
                         );
                       }
                    ),

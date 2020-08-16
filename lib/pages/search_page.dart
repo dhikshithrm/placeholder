@@ -32,11 +32,11 @@ class SearchPage extends StatelessWidget {
                 onTap: (){
                   Navigator.of(context).push(CupertinoPageRoute(builder:(context){
                     return ProductDetails(
-                      prod_name: post.title,
-                      prod_description: Item_services().getItemWithName(post.title)['descrption']??"jhkajshgjahsgd",
-                      prod_new_price: Item_services().getItemWithName(post.title)['price']??233,
-                      prod_old_price: Item_services().getItemWithName(post.title)['old_price']??477,
-                      prod_picture: Item_services().getItemWithName(post.title)['imageUrl']??"https://images.wallpaperscraft.com/",
+                      // prod_name: post.title,
+                      // prod_description: Item_services().getItemWithName(post.title)
+                      // prod_new_price: Item_services().getItemWithName(post.title)
+                      // prod_old_price: Item_services().getItemWithName(post.title)
+                      // prod_picture: Item_services().getItemWithName(post.title)
                     );
                   }));
                 },

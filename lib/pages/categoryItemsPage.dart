@@ -87,6 +87,7 @@ class _CategoryPageState extends State<CategoryPage> {
                           old_price: categoryItems[index]['old_price'],
                           price: categoryItems[index]['price'],
                           description: categoryItems[index]['description'],
+                          diffVariants: categoryItems[index]['customisable'],
                         );
                       }
                    ),

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:its12/homepage.dart';
 import 'package:its12/pages/cart.dart';
 import 'package:its12/items/cart_products.dart';
+import 'package:its12/services/item_services.dart';
 
 class ProductDetails extends StatefulWidget {
   final prod_name;
@@ -11,13 +12,17 @@ class ProductDetails extends StatefulWidget {
   final prod_old_price;
   final prod_picture;
   final prod_description;
-  bool like = false;
+  final bool prod_diffVariants;
+  bool like = false; 
+  List<Map<String,int>> variants;
+  String defVariant;
   int qnt = 1;
   ProductDetails({this.prod_name,
                   this.prod_picture,
                   this.prod_new_price,
                   this.prod_old_price,
-                  this.prod_description
+                  this.prod_description,
+                  this.prod_diffVariants
                   });
 
   @override
@@ -25,7 +30,19 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
-  
+ 
+  @override
+  void initState() {
+    Item_services().getItemWithName(widget.prod_name).then((value){
+      setState(() {
+        widget.variants = value.documents[0]["diffVariants"];
+        widget.defVariant = value.documents[0]["defVariant"];
+      });
+    });
+    print(widget.defVariant);
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,7 +99,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text("₹${widget.prod_new_price}",
+                        Text("₹${widget.prod_old_price}",
                         style: TextStyle(
                           decoration: TextDecoration.lineThrough,
                           color: Colors.red,
@@ -102,53 +119,57 @@ class _ProductDetailsState extends State<ProductDetails> {
               ),  
             ),
           ),
-          Padding(padding: EdgeInsets.all(15.0),
-          child: GestureDetector(
-            onTap: () {
-              showDialog(context: context,builder: (BuildContext context){
-                    return Dialog(
-                      shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(7.0)), //this right here
-                      child: Container(
-                        height: 350,
-                        child:  Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                height: 50,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFAB30000),
-                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(7.0),topRight: Radius.circular(7.0))
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: <Widget>[
-                                    Text("Choose Variant",style: TextStyle(fontSize: 22),),
-                                    IconButton(icon: Icon(Icons.cancel), onPressed: (){Navigator.of(context).pop();},splashColor: Colors.transparent,)
-                                  ],
-                                   ),
+          Visibility(
+            visible: widget.prod_diffVariants,
+            child: Padding(padding: EdgeInsets.all(15.0),
+            child: GestureDetector(
+              onTap: () {
+                showDialog(context: context,builder: (BuildContext context){
+                      return Dialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(7.0)), //this right here
+                        child: Container(
+                          height: 350,
+                          child:  Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  height: 50,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFAB30000),
+                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(7.0),topRight: Radius.circular(7.0))
                                   ),
-                                ],
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    children: <Widget>[
+                                      Text("Choose Variant",style: TextStyle(fontSize: 22),),
+                                      IconButton(icon: Icon(Icons.cancel), onPressed: (){Navigator.of(context).pop();},splashColor: Colors.transparent,)
+                                    ],
+                                     ),
+                                    ),
+                                    
+                                  ],
+                                ),
                               ),
-                            ),
-                        );
-                      });
-                    },
-               child: Container(
-              decoration: BoxDecoration(
-              color: Colors.black12,  
-              border: Border.all(width:1.0,color:Colors.black38),
-              borderRadius: BorderRadius.circular(7.0)
+                          );
+                        });
+                      },
+                 child: Container(
+                decoration: BoxDecoration(
+                color: Colors.black12,  
+                border: Border.all(width:1.0,color:Colors.black38),
+                borderRadius: BorderRadius.circular(7.0)
+                ),
+                child: ListTile(
+                  title: Text(widget.defVariant??"1/2KG",style:TextStyle(fontSize: 18.0)),
+                  subtitle: Text(widget.prod_name,overflow: TextOverflow.ellipsis,),
+                  trailing: Icon(Icons.navigate_next,size: 40.0,),
+                )
               ),
-              child: ListTile(
-                title: Text("1/2 KG",style:TextStyle(fontSize: 18.0)),
-                subtitle: Text(widget.prod_name,overflow: TextOverflow.ellipsis,),
-                trailing: Icon(Icons.navigate_next,size: 40.0,),
-              )
             ),
-          ),
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
