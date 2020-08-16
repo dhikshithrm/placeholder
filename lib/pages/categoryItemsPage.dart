@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:its12/items/item_class.dart';
+import 'package:its12/services/category_services.dart';
 class CategoryPage extends StatefulWidget {
   String category;
   CategoryPage({
@@ -13,9 +14,20 @@ class _CategoryPageState extends State<CategoryPage> {
   List<Map<String, dynamic>> categoryItems=[];
   @override
   void initState() {
+    super.initState();
+    getItems();
     
     // TODO: implement initState
-    super.initState();
+    
+  }
+
+  void getItems(){
+    Category_services().getItemsWithCategory(widget.category)
+    .then((value) {
+      setState(() {
+        categoryItems = value;
+      });
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -36,17 +48,33 @@ class _CategoryPageState extends State<CategoryPage> {
          child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
+                padding: const EdgeInsets.fromLTRB(7.3,8.0,7.3,8.0),
+                child: Container(
                   width: double.infinity,
+                  height: 50,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5.0),
+                      color: Colors.black
+                  ),
                   child: Center(
-                    child: Text(widget.category,style: TextStyle(
-                      fontSize: 22.0,
-                    ),),
+                      child: Padding(padding: EdgeInsets.all(5.0),
+                        child: Text(
+                          widget.category,
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500
+                          ),
+                        ),
+                      ),
                   ),
                 ),
             ),
+            categoryItems.length == 0?
             Container(
+                height: 500,
+                child: Center(child: CircularProgressIndicator()))
+            :Container(
               height: 1500,
               child: GridView.builder(
                    primary: false,

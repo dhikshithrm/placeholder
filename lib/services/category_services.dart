@@ -12,7 +12,16 @@ class Category_services{
            });
     return categories;
   }
-  getItemsWithCategory(category){
-
+    Future<List<Map<String, dynamic>>> getItemsWithCategory(category)async{
+    List<Map<String, dynamic>> citems = [];
+     await Firestore.instance
+              .collection("items")
+              .where("category",isEqualTo: category)
+              .getDocuments().then((value){
+                value.documents.forEach((e) {
+                  citems.add(e.data);
+                });
+             });
+             return citems;
   }
 }
