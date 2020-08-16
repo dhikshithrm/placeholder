@@ -377,13 +377,13 @@ class _HomePageState extends State<HomePage> {
                    color: Colors.white,
                    fontSize: 20,
                    fontWeight: FontWeight.w800
+                 ),
                 ),
-               ),
                )
-             )
+              )
              ]
            ),
          ));
-     }
-   }
+        }
+      }
 

@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:its12/services/user_management.dart';
 import 'package:path/path.dart' as Path;
+import 'package:image_cropper/image_cropper.dart';
 
 class Signup extends StatefulWidget {
   @override
@@ -23,8 +24,20 @@ class _SignupState extends State<Signup> {
 
   Future getImage()async{
     final pickedFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+    File cropped = await ImageCropper.cropImage(
+      sourcePath: pickedFile.path,
+      aspectRatio: CropAspectRatio(ratioX: 1,ratioY: 1),
+      compressQuality: 100,
+      maxHeight: 200,
+      maxWidth: 200,
+      androidUiSettings: AndroidUiSettings(
+        toolbarColor: Colors.black87,
+        toolbarTitle: "Cropper",
+        statusBarColor: Colors.redAccent,
+        backgroundColor: Colors.white
+      ));
     setState(() {
-      image = pickedFile;
+      image = cropped;
     });
     storageReference = FirebaseStorage.instance.ref()
     .child('users/${Path.basename(image.path)}');
