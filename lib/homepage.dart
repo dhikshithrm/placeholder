@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -316,13 +317,14 @@ class _HomePageState extends State<HomePage> {
               )
             :Container(
               height: 620,
+              color: Colors.transparent,
                  child: GridView.builder(
+                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
                    primary: false,
                   itemCount: categoryItems.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
                   itemBuilder: (BuildContext context,index){
                       return Category(index: index, mainCategories: categoryItems,);
-                  }
+                  },
                   )
             ),
             Padding(
@@ -358,35 +360,27 @@ class _HomePageState extends State<HomePage> {
             );
         }
        }
-   class Category extends StatefulWidget {
-     var mainCategories;
-     int index;
-     @override
-     Category({this.index,this.mainCategories});
-     createState() => _CategoryState(index,mainCategories);
-   }
-   
-   class _CategoryState extends State<Category>{
-     int index;
-     var mainCategories;
-     _CategoryState(this.index,this.mainCategories);
-     @override
-     Widget build(BuildContext context) {
-       return Expanded(
-         child: GestureDetector(
+       class Category extends StatelessWidget {
+         final mainCategories;
+         final int index;
+         const Category({Key key, this.mainCategories, this.index}) : super(key: key);
+         @override
+         Widget build(BuildContext context) {
+           return  GestureDetector(
            onTap: () {
              Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
-               return CategoryPage(category: widget.mainCategories[index]["category"]);
+               return CategoryPage(category: mainCategories[index]["category"]);
              }));
            },
-             child: Padding(
-             padding: const EdgeInsets.all(6.0),
-             child: Stack(
+             child: Expanded(
+                  child: Padding(
+               padding: const EdgeInsets.all(6.0),
+               child: Stack(
                 children: <Widget>[
                    Container(
                    decoration: BoxDecoration(
                      color: Colors.white.withOpacity(0.8),
-                     image: DecorationImage(image: NetworkImage(widget.mainCategories[index]["Images"][0]),fit: BoxFit.cover, ),
+                     image: DecorationImage(image: NetworkImage(mainCategories[index]["Images"][0]),fit: BoxFit.cover, ),
                      borderRadius: BorderRadius.circular(10)
                    ),
                  ),
@@ -396,7 +390,7 @@ class _HomePageState extends State<HomePage> {
                      color: Colors.black45
                    ),
                    child: Center(
-                     child: Text(widget.mainCategories[index]['category'],
+                     child: Text(mainCategories[index]['category'],
                      textAlign: TextAlign.center,
                      style: TextStyle(
                        color: Colors.white,
@@ -408,9 +402,8 @@ class _HomePageState extends State<HomePage> {
                   )
                  ]
                ),
+               ),
              ),
-         ),
          );
+         }
         }
-      }
-
