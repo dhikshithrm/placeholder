@@ -208,6 +208,48 @@ class _ProductDetailsState extends State<ProductDetails> {
           Divider(thickness: 2.0,),
           Padding(
             padding: const EdgeInsets.all(8.0),
+            child: Text("Delivery Details",style: GoogleFonts.b612(
+              fontSize: 32.0,
+              fontWeight: FontWeight.bold
+            ),),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 5.0),
+                  child: Text("*Offers are not valid on chocolates if any.",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Text(
+                    "*Please order at least 4-5 hours befor ordering cakes and chocolates,1 day befor for personalized products,gifts(teddy's,cases,mugs,pillows,t-shirts,flowers) category",
+                    style: TextStyle(fontWeight: FontWeight.bold)
+                    ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Text("*we deliver urgent orders(within two hours) for some products like cakes.\n Please feel free to contact us in contact us section",
+                  style: TextStyle(fontWeight: FontWeight.bold)
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Text("*extra charges may applicable for some products on urgent orders",
+                  style: TextStyle(fontWeight: FontWeight.bold)
+                  ),
+                )
+              ],
+            )
+          ),
+          Divider(thickness: 2.0,),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
             child: Text("Similar Products",style: GoogleFonts.b612(
               fontSize: 32.0,
               fontWeight: FontWeight.bold

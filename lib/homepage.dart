@@ -160,7 +160,7 @@ class _HomePageState extends State<HomePage> {
                                     break;
                                   case "Profile":
                                     Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
-                                      return Profilepage(name: name,email: email,photoUrl: photourl,);
+                                      return ProfilePage();
                                     }));
                                 }
                               },
