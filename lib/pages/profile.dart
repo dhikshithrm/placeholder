@@ -28,7 +28,6 @@ class ProfilePageState extends State<ProfilePage>
   String userMobile;
   String _uploadUrl;
   bool updated = false;
-  bool knob;
   TextEditingController _nameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _mobileController = TextEditingController();
@@ -37,7 +36,7 @@ class ProfilePageState extends State<ProfilePage>
 
 
   void getUser()async{
-   FirebaseUser user =  await FirebaseAuth.instance.currentUser().then((value){
+    FirebaseUser user= await FirebaseAuth.instance.currentUser().then((value){
     setState(() {
       _user = value; 
       photoUrl = value.photoUrl;
@@ -45,6 +44,7 @@ class ProfilePageState extends State<ProfilePage>
     setState(() {
       userName = _user.displayName;
     });
+
    });
     
   }
@@ -74,18 +74,27 @@ class ProfilePageState extends State<ProfilePage>
     storageReference.getDownloadURL().then((value){
       setState(() {
         _uploadUrl = value;
-      });
+      }); 
     });
    }
   @override
   void initState() {
     getUser();
-    setState(() {
-      knob = !(userName==null||userName==""||!_status);
-    });
-    
+  
     // TODO: implement initState
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _nameController.text = '';
+    _emailController.clear();
+    _pinCodeController.clear();
+    _mobileController.clear();
+    _stateController.clear();
+    // Clean up the controller when the Widget is disposed
+    myFocusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -281,6 +290,7 @@ class ProfilePageState extends State<ProfilePage>
                                 ),
                               ],
                             )),
+                      !(_user.email==null||_user.email==''||!_status)?
                       Padding(
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
@@ -292,7 +302,7 @@ class ProfilePageState extends State<ProfilePage>
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   new Text(
-                                    'Email ID',
+                                    _user.email,
                                     style: TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold),
@@ -300,8 +310,8 @@ class ProfilePageState extends State<ProfilePage>
                                 ],
                               ),
                             ],
-                          )),
-                      Padding(
+                          ))
+                      :Padding(
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 2.0),
                           child: new Row(
@@ -422,18 +432,6 @@ class ProfilePageState extends State<ProfilePage>
     ));
   }
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
-    _pinCodeController.dispose();
-    _mobileController.dispose();
-    _stateController.dispose();
-    // Clean up the controller when the Widget is disposed
-    myFocusNode.dispose();
-    super.dispose();
-  }
-
   Widget _getActionButtons() {
     return Padding(
       padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
@@ -451,12 +449,15 @@ class ProfilePageState extends State<ProfilePage>
                 color: Colors.green,
                 onPressed: () {
                   setState(() {
-                    userName = _nameController.text;
+                    if(_nameController.text!=null&&_nameController.text!=''){
+                        userName = _nameController.text;
+                    }
                     });
                     UserUpdateInfo update = UserUpdateInfo();
                     update.photoUrl =_uploadUrl;
                      update.displayName = _nameController.text;
                       _user.updateProfile(update);
+                     Firestore.instance.document("users/${_user.uid}").updateData({"dp":_uploadUrl});
                     _status = true;
                     FocusScope.of(context).requestFocus(new FocusNode());
                   },

@@ -42,6 +42,7 @@ class _HomePageState extends State<HomePage> {
      email = user.email;
      photourl = user.photoUrl;
     });
+    print(user.providerData);
   }
 
   @override
@@ -350,6 +351,7 @@ class _HomePageState extends State<HomePage> {
                           price: productItems[index]['price'],
                           description: productItems[index]['description'],
                           diffVariants: productItems[index]['customisable'],
+                          category: productItems[index]['category'],
                         );
                       }
                    ),

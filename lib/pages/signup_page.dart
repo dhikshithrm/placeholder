@@ -18,6 +18,7 @@ class _SignupState extends State<Signup> {
   String _name;
   String _email;
   String _password;
+  String _phone;
   String _uploadUrl;
   StorageReference storageReference;
   UserManagemenent _userManagemenent = UserManagemenent();
@@ -93,7 +94,7 @@ class _SignupState extends State<Signup> {
                        });
                      },
                    ),
-                  SizedBox(height: 15.0),
+                  SizedBox(height: 20.0,),
                   TextField(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),

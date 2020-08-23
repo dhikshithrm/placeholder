@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:its12/homepage.dart';
 import 'package:its12/pages/cart.dart';
 import 'package:its12/items/cart_products.dart';
+import 'package:its12/services/category_services.dart';
 import 'package:its12/services/item_services.dart';
 
 class ProductDetails extends StatefulWidget {
@@ -12,9 +13,11 @@ class ProductDetails extends StatefulWidget {
   final prod_old_price;
   final prod_picture;
   final prod_description;
+  final prod_category;
   final bool prod_diffVariants;
   bool like = false; 
   List<Map<String,int>> variants;
+  List<Map<String,dynamic>> similar_items;
   String defVariant;
   int qnt = 1;
   ProductDetails({this.prod_name,
@@ -22,7 +25,8 @@ class ProductDetails extends StatefulWidget {
                   this.prod_new_price,
                   this.prod_old_price,
                   this.prod_description,
-                  this.prod_diffVariants
+                  this.prod_diffVariants,
+                  this.prod_category
                   });
 
   @override
@@ -39,7 +43,11 @@ class _ProductDetailsState extends State<ProductDetails> {
         widget.defVariant = value.documents[0]["defVariant"];
       });
     });
-    print(widget.defVariant);
+    Category_services().getItemsWithCategory(widget.prod_category).then((value){
+      setState(() {
+        widget.similar_items = value;
+      });
+    });
     // TODO: implement initState
     super.initState();
   }
@@ -256,7 +264,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             ),),),
           Container(
             height: 500,
-            child: Similar_products(),
+            child: Similar_products(similar_items: widget.similar_items,prod_name: widget.prod_name,),
           )
         ],
       ),
@@ -264,51 +272,33 @@ class _ProductDetailsState extends State<ProductDetails> {
   }
 }
 class Similar_products extends StatefulWidget {
+  List<Map<String,dynamic>>similar_items;
+  String prod_name;
+  Similar_products({this.similar_items,this.prod_name});
   @override
   _Similar_productsState createState() => _Similar_productsState();
 }
 
 class _Similar_productsState extends State<Similar_products> {
-  var item_list = [
-   {
-     "name":"Butterscotch Cake(Eggless)",
-     "picture": "assets/Products/cakes2.jpg",
-     "old_price": 399,
-     "price": 339,
-   },
-   {
-     "name":"Flower Bouquet",
-     "picture": "assets/Products/flowerbouquet.jpg",
-     "old_price": 450,
-     "price": 399
-   },
-   {
-     "name":"Chocolate",
-     "picture": "assets/Products/silkoreo.jpg",
-     "old_price": 450,
-     "price": 399
-   },
-   {
-     "name":"Customized Printed t-shirt",
-     "picture": "assets/Products/tshirt.jpg",
-     "old_price": 450,
-     "price": 399
-   },
-  ];
+  void delProduct(List<Map<String,dynamic>>prod_name){
+    prod_name.removeWhere((element) => element['name']==widget.prod_name);
+    widget.similar_items = prod_name.sublist(0,4);
+  }
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
       primary: false,
-      itemCount: item_list.length,
+      itemCount: widget.similar_items.length>=4?4:widget.similar_items.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
       itemBuilder: (BuildContext context,index){
-        return Similar_Singel_prod(
-          prod_name: item_list[index]['name'],
-          prod_picture: item_list[index]['picture'],
-          old_price: item_list[index]['old_price'],
-          price: item_list[index]['price'],
-        );
-      });
+        delProduct(widget.similar_items);
+            return Similar_Singel_prod(
+                      prod_name: widget.similar_items[index]['name'],
+                      prod_picture: widget.similar_items[index]['imageUrl'],
+                      old_price: widget.similar_items[index]['old_price'],
+                      price: widget.similar_items[index]['price'],
+                        );
+         });
   }
 }
 class Similar_Singel_prod extends StatelessWidget {
@@ -316,7 +306,7 @@ class Similar_Singel_prod extends StatelessWidget {
   final prod_picture;
   final old_price;
   final price;
-
+  Map<String,dynamic> simlar_prod;
   Similar_Singel_prod({this.old_price,this.price,this.prod_name,this.prod_picture});
   @override
   Widget build(BuildContext context) {
@@ -325,11 +315,19 @@ class Similar_Singel_prod extends StatelessWidget {
       elevation: 5.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       child: InkWell(
-          onTap: ()=> Navigator.of(context).push(CupertinoPageRoute(builder: (context) => ProductDetails(prod_name: prod_name,
-          prod_picture: prod_picture,
-          prod_new_price: price,
-          prod_old_price: old_price,
-          ),)),
+          onTap: (){
+            Item_services().getItemWithName(this.prod_name).then((value){
+              Navigator.of(context).push(CupertinoPageRoute(builder: (context) => 
+                ProductDetails(prod_name: value.documents[0].data['name'],
+                    prod_picture: value.documents[0].data['imageUrl'],
+                    prod_new_price: value.documents[0].data['price'],
+                    prod_old_price: value.documents[0].data['old_price'],
+                    prod_description: value.documents[0].data['description'],
+                    prod_diffVariants: value.documents[0].data['customisable'],
+                    prod_category: value.documents[0].data['category'],
+                )));
+                });
+             },
           child: GridTile(
           footer: Container(
             color: Colors.white,
@@ -359,9 +357,7 @@ class Similar_Singel_prod extends StatelessWidget {
               ),
             ),
           ),
-          child: Image(image: AssetImage(
-            prod_picture,
-          ),fit: BoxFit.contain,),
+          child: Image(image: NetworkImage(prod_picture),fit: BoxFit.contain,),
         ),
       ),
     );
