@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -112,7 +112,14 @@ class _HomePageState extends State<HomePage> {
          )
         );
     }
-
+  _launchURL() async {
+  const url = 'tel://+918688336248';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -163,6 +170,9 @@ class _HomePageState extends State<HomePage> {
                                     Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
                                       return ProfilePage();
                                     }));
+                                    break;
+                                  case "Contact Us":
+                                    _launchURL();
                                 }
                               },
                               title: Text('$e',

@@ -88,6 +88,7 @@ class _CategoryPageState extends State<CategoryPage> {
                           price: categoryItems[index]['price'],
                           description: categoryItems[index]['description'],
                           diffVariants: categoryItems[index]['customisable'],
+                          category: widget.category,
                         );
                       }
                    ),
