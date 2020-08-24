@@ -1,8 +1,8 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -19,6 +19,8 @@ class ProfilePageState extends State<ProfilePage>
   String profilePlaceHolder = "https://firebasestorage.googleapis.com/v0/b/twelve-ccbd2.appspot.com/o/static%2Fuser.png?alt=media&token=9b70d60d-fbad-4f77-9847-6c97214ba509";
   bool _status = true;
   final FocusNode myFocusNode = FocusNode();
+  Firestore _db = Firestore.instance;
+  DocumentReference currentUser;
   StorageReference storageReference;
   File imageFile;
   String photoUrl;
@@ -28,25 +30,30 @@ class ProfilePageState extends State<ProfilePage>
   String userMobile;
   String _uploadUrl;
   bool updated = false;
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _mobileController = TextEditingController();
-  TextEditingController _pinCodeController = TextEditingController();
-  TextEditingController _stateController = TextEditingController();
-
-
+  GlobalKey<FormState> _emailKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _mobileKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _pinKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _stateKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _nameKey = GlobalKey<FormState>();
   void getUser()async{
     FirebaseUser user= await FirebaseAuth.instance.currentUser().then((value){
     setState(() {
       _user = value; 
-      photoUrl = value.photoUrl;
+      photoUrl = value.photoUrl; 
+      userName = value.displayName;
+      userEmail = value.email;
     });
-    setState(() {
-      userName = _user.displayName;
-    });
-
    });
-    
+  }
+  void getUserAdditionalInfo()async{
+    _db.collection('user')
+    .where('id',isEqualTo:_user.uid)
+    .getDocuments()
+    .then((value){
+      setState(() {
+        userMobile = value.documents[0].data['phone'];
+      });
+    });
   }
   Future getImage()async{
     final pickedFile = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -80,18 +87,13 @@ class ProfilePageState extends State<ProfilePage>
   @override
   void initState() {
     getUser();
-  
+    getUserAdditionalInfo();
     // TODO: implement initState
     super.initState();
   }
 
   @override
   void dispose() {
-    _nameController.text = '';
-    _emailController.clear();
-    _pinCodeController.clear();
-    _mobileController.clear();
-    _stateController.clear();
     // Clean up the controller when the Widget is disposed
     myFocusNode.dispose();
     super.dispose();
@@ -279,13 +281,21 @@ class ProfilePageState extends State<ProfilePage>
                               mainAxisSize: MainAxisSize.max,
                               children: <Widget>[
                                 new Flexible(
-                                  child: new TextField(
-                                    decoration: const InputDecoration(
-                                      hintText: "Enter Your Name"
+                                  child: Form(
+                                    key: _nameKey,
+                                     child: new TextFormField(
+                                       validator: (input){
+                                         if(input.isEmpty){
+                                           return "Provide Name";
+                                         }
+                                       },
+                                       onSaved: (input)=> userName = input,
+                                      decoration: const InputDecoration(
+                                        hintText: "Enter Your Name"
+                                      ),
+                                      enabled: !_status,
+                                      autofocus: !_status,
                                     ),
-                                    controller: _nameController,
-                                    enabled: !_status,
-                                    autofocus: !_status,
                                   ),
                                 ),
                               ],
@@ -318,14 +328,25 @@ class ProfilePageState extends State<ProfilePage>
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
                               new Flexible(
-                                child: new TextField(
-                                  decoration: const InputDecoration(
-                                      hintText: "email"),
-                                  enabled: !_status,
+                                child: Form(
+                                  key: _emailKey,
+                                  child: new TextFormField(
+                                    validator: (input){
+                                      if(!input.contains(RegExp(
+            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'))){
+                                            return "Enter Valid ";
+                                          }
+                                         },
+                                         onSaved: (input)=>userEmail = input,
+                                    decoration: const InputDecoration(
+                                        hintText: "email"),
+                                    enabled: !_status,
+                                  ),
                                 ),
                               ),
                             ],
                           )),
+                      !(userMobile!=null||userMobile!=''||!_status)?
                       Padding(
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
@@ -337,7 +358,7 @@ class ProfilePageState extends State<ProfilePage>
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   new Text(
-                                    'Mobile',
+                                     userMobile,
                                     style: TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold),
@@ -345,18 +366,27 @@ class ProfilePageState extends State<ProfilePage>
                                 ],
                               ),
                             ],
-                          )),
-                      Padding(
+                          ))
+                      :Padding(
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 2.0),
                           child: new Row(
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
                               new Flexible(
-                                child: new TextField(
-                                  decoration: const InputDecoration(
-                                      hintText: "Enter Mobile Number"),
-                                  enabled: !_status,
+                                key: _mobileKey,
+                                child: Form(
+                                 child: new TextFormField(
+                                   validator: (input){
+                                     if(input.length!=10){
+                                       return "Enter Valid Number";
+                                     }
+                                   },
+                                   onSaved: (input)=> userMobile = input,
+                                    decoration: const InputDecoration(
+                                        hintText: "Enter Mobile Number"),
+                                    enabled: !_status,
+                                  ),
                                 ),
                               ),
                             ],
@@ -448,18 +478,23 @@ class ProfilePageState extends State<ProfilePage>
                 textColor: Colors.white,
                 color: Colors.green,
                 onPressed: () {
-                  setState(() {
-                    if(_nameController.text!=null&&_nameController.text!=''){
-                        userName = _nameController.text;
+                    if(_nameKey.currentState.validate()&&_emailKey.currentState.validate()){
+                      _nameKey.currentState.save();
+                      _emailKey.currentState.save();
+                      _mobileKey.currentState.save();
+                      UserUpdateInfo update = UserUpdateInfo();
+                        update.photoUrl =_uploadUrl;
+                        update.displayName = userName;
+                          _user.updateProfile(update);
+                        Firestore.instance.document("users/${_user.uid}").updateData({
+                          "dp":_uploadUrl,
+                          "username": userName,
+                          "email": userEmail,
+                          "phone": userMobile,
+                          });
+                        _status = true;
+                        FocusScope.of(context).requestFocus(new FocusNode());
                     }
-                    });
-                    UserUpdateInfo update = UserUpdateInfo();
-                    update.photoUrl =_uploadUrl;
-                     update.displayName = _nameController.text;
-                      _user.updateProfile(update);
-                     Firestore.instance.document("users/${_user.uid}").updateData({"dp":_uploadUrl});
-                    _status = true;
-                    FocusScope.of(context).requestFocus(new FocusNode());
                   },
                 shape: new RoundedRectangleBorder(
                     borderRadius: new BorderRadius.circular(20.0)),
