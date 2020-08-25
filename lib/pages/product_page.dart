@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,6 +8,7 @@ import 'package:its12/pages/cart.dart';
 import 'package:its12/items/cart_products.dart';
 import 'package:its12/services/category_services.dart';
 import 'package:its12/services/item_services.dart';
+import 'package:uuid/uuid.dart';
 
 class ProductDetails extends StatefulWidget {
   final prod_name;
@@ -20,6 +23,7 @@ class ProductDetails extends StatefulWidget {
   List<Map<String,dynamic>> similar_items;
   String defVariant;
   int qnt = 1;
+  String useruid;
   ProductDetails({this.prod_name,
                   this.prod_picture,
                   this.prod_new_price,
@@ -34,9 +38,15 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
- 
+  Future getUser()async{
+    FirebaseAuth.instance.currentUser().then((value){setState(() {
+      widget.useruid = value.uid;
+    });});
+    
+  }
   @override
   void initState() {
+    getUser();
     Item_services().getItemWithName(widget.prod_name).then((value){
       setState(() {
         widget.variants = value.documents[0]["diffVariants"];
@@ -196,9 +206,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                   
                 });
               },color: Color(0xFAB30000),),
-              IconButton(icon: Icon(widget.like?Icons.favorite:Icons.favorite_border), onPressed: (){setState(() {
+              IconButton(icon: Icon(widget.like?Icons.favorite:Icons.favorite_border), onPressed: (){
+                var uuid = Uuid();
+                setState(() {
                 widget.like = !widget.like;
-              });},color: Color(0xFAB30000),)
+              });
+               Firestore.instance.collection("wishlist_items").document(uuid.v1())
+               .setData({});
+              },color: Color(0xFAB30000),)
             ],
           ),
           Divider(thickness: 2.0,),

@@ -1,12 +1,9 @@
-import 'dart:math';
+
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:flappy_search_bar/scaled_tile.dart';
 import 'package:flappy_search_bar/search_bar_style.dart';
-import 'package:flare_flutter/asset_provider.dart';
-import 'package:flare_flutter/flare_actor.dart';
-import 'package:flare_flutter/provider/asset_flare.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:its12/pages/product_page.dart';
@@ -30,15 +27,17 @@ class SearchPage extends StatelessWidget {
           onSearch: search, onItemFound: (Post post,int index){
               return GestureDetector(
                 onTap: (){
-                  Navigator.of(context).push(CupertinoPageRoute(builder:(context){
-                    return ProductDetails(
-                      // prod_name: post.title,
-                      // prod_description: Item_services().getItemWithName(post.title)
-                      // prod_new_price: Item_services().getItemWithName(post.title)
-                      // prod_old_price: Item_services().getItemWithName(post.title)
-                      // prod_picture: Item_services().getItemWithName(post.title)
-                    );
-                  }));
+                  Item_services().getItemWithName(post.title).then((value){
+                  Navigator.of(context).push(CupertinoPageRoute(builder: (context) => 
+                    ProductDetails(prod_name: value.documents[0].data['name'],
+                        prod_picture: value.documents[0].data['imageUrl'],
+                        prod_new_price: value.documents[0].data['price'],
+                        prod_old_price: value.documents[0].data['old_price'],
+                        prod_description: value.documents[0].data['description'],
+                        prod_diffVariants: value.documents[0].data['customisable'],
+                        prod_category: value.documents[0].data['category'],
+                )));
+                });
                 },
                 child: Container(
                   decoration: BoxDecoration(

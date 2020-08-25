@@ -30,6 +30,8 @@ class ProfilePageState extends State<ProfilePage>
   String userMobile;
   String _uploadUrl;
   bool updated = false;
+  bool editname = false;
+  bool editemail = false;
   GlobalKey<FormState> _emailKey = GlobalKey<FormState>();
   GlobalKey<FormState> _mobileKey = GlobalKey<FormState>();
   GlobalKey<FormState> _pinKey = GlobalKey<FormState>();
@@ -237,7 +239,7 @@ class ProfilePageState extends State<ProfilePage>
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   new Text(
-                                    'Parsonal Information',
+                                    'Personal Information',
                                     style: TextStyle(
                                         fontSize: 18.0,
                                         fontWeight: FontWeight.bold),
@@ -253,14 +255,14 @@ class ProfilePageState extends State<ProfilePage>
                               )
                             ],
                           )),
-                          !(userName==null||userName==""||!_status)
+                          (!(userName==null||userName==""||editname))
                           ?Padding(
                           padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 25.0),
+                              left: 25.0, right: 25.0, top: 10.0),
                           child: new Row(
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
-                              new Column(
+                              new Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
@@ -270,6 +272,12 @@ class ProfilePageState extends State<ProfilePage>
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold),
                                   ),
+                                  Visibility(
+                                    visible: !editname&&!_status,
+                                     child: IconButton(icon: Icon(Icons.edit,size: 20,), onPressed: (){setState(() {
+                                      editname =!editname;
+                                    });}),
+                                  )
                                 ],
                               ),
                             ],
@@ -300,14 +308,14 @@ class ProfilePageState extends State<ProfilePage>
                                 ),
                               ],
                             )),
-                      !(_user.email==null||_user.email==''||!_status)?
+                      !(_user.email==null||_user.email==''||editemail)?
                       Padding(
                           padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 25.0),
+                              left: 25.0, right: 25.0, top: 10.0),
                           child: new Row(
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
-                              new Column(
+                              new Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
@@ -317,6 +325,12 @@ class ProfilePageState extends State<ProfilePage>
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold),
                                   ),
+                                  Visibility(
+                                    visible: !editemail&&!_status,
+                                     child: IconButton(icon: Icon(Icons.edit,size: 20,), onPressed: (){setState(() {
+                                      editemail =!editemail;
+                                    });}),
+                                  )
                                 ],
                               ),
                             ],
@@ -374,9 +388,10 @@ class ProfilePageState extends State<ProfilePage>
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
                               new Flexible(
-                                key: _mobileKey,
                                 child: Form(
+                                 key: _mobileKey,
                                  child: new TextFormField(
+                                   keyboardType: TextInputType.phone,
                                    validator: (input){
                                      if(input.length!=10){
                                        return "Enter Valid Number";
@@ -433,6 +448,7 @@ class ProfilePageState extends State<ProfilePage>
                                 child: Padding(
                                   padding: EdgeInsets.only(right: 10.0),
                                   child: new TextField(
+                                    keyboardType: TextInputType.number,
                                     decoration: const InputDecoration(
                                         hintText: "Enter Pin Code"),
                                     enabled: !_status,
@@ -495,6 +511,11 @@ class ProfilePageState extends State<ProfilePage>
                         _status = true;
                         FocusScope.of(context).requestFocus(new FocusNode());
                     }
+                    if(!(editemail||editname)&&_mobileKey.currentState.validate()){
+                      Firestore.instance.document("users/${_user.uid}").setData({"phone":userMobile});
+                      _status = true;
+                        FocusScope.of(context).requestFocus(new FocusNode());
+                    }
                   },
                 shape: new RoundedRectangleBorder(
                     borderRadius: new BorderRadius.circular(20.0)),
@@ -513,6 +534,8 @@ class ProfilePageState extends State<ProfilePage>
                 onPressed: () {
                   setState(() {
                     _status = true;
+                    editname =false;
+                    editemail = false;
                     FocusScope.of(context).requestFocus(new FocusNode());
                   });
                 },
@@ -541,6 +564,8 @@ class ProfilePageState extends State<ProfilePage>
       onTap: () {
         setState(() {
           _status = false;
+          editname =false;
+          editemail = false;
         });
       },
     );
