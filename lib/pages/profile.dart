@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -32,6 +31,7 @@ class ProfilePageState extends State<ProfilePage>
   bool updated = false;
   bool editname = false;
   bool editemail = false;
+  bool imageUpdated =false;
   GlobalKey<FormState> _emailKey = GlobalKey<FormState>();
   GlobalKey<FormState> _mobileKey = GlobalKey<FormState>();
   GlobalKey<FormState> _pinKey = GlobalKey<FormState>();
@@ -80,6 +80,10 @@ class ProfilePageState extends State<ProfilePage>
     StorageUploadTask uploadTask = storageReference.putFile(imageFile);
     await uploadTask.onComplete;
     Fluttertoast.showToast(msg: "Image Updated");
+    setState(() {
+        imageUpdated = true;
+    });
+  
     storageReference.getDownloadURL().then((value){
       setState(() {
         _uploadUrl = value;
@@ -494,16 +498,18 @@ class ProfilePageState extends State<ProfilePage>
                 textColor: Colors.white,
                 color: Colors.green,
                 onPressed: () {
-                    if(_nameKey.currentState.validate()&&_emailKey.currentState.validate()){
+                  if(imageUpdated){
+                      UserUpdateInfo userUpdateInfo = UserUpdateInfo();
+                      userUpdateInfo.photoUrl = _uploadUrl;
+                      _user.updateProfile(userUpdateInfo);
+                      Firestore.instance.document("users/${_user.uid}").updateData({"dp":_uploadUrl});
+                    }
+                    if(_nameKey.currentState.validate()){
                       _nameKey.currentState.save();
-                      _emailKey.currentState.save();
-                      _mobileKey.currentState.save();
                       UserUpdateInfo update = UserUpdateInfo();
-                        update.photoUrl =_uploadUrl;
                         update.displayName = userName;
                           _user.updateProfile(update);
                         Firestore.instance.document("users/${_user.uid}").updateData({
-                          "dp":_uploadUrl,
                           "username": userName,
                           "email": userEmail,
                           "phone": userMobile,
@@ -511,6 +517,7 @@ class ProfilePageState extends State<ProfilePage>
                         _status = true;
                         FocusScope.of(context).requestFocus(new FocusNode());
                     }
+                    
                     if(!(editemail||editname)&&_mobileKey.currentState.validate()){
                       Firestore.instance.document("users/${_user.uid}").setData({"phone":userMobile});
                       _status = true;

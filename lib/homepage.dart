@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/widgets.dart';
@@ -26,27 +29,15 @@ class _HomePageState extends State<HomePage> {
   final GoogleSignIn googleSignIn = GoogleSignIn();
   Firestore db = Firestore.instance;
   FirebaseDatabase _database = FirebaseDatabase.instance;
-  String name;
   int itemlen;
   bool categoryisLoading;
   List<Map<String, dynamic>> categoryItems=[];
   List<Map<String, dynamic>> productItems=[];
   Category_services category_services = Category_services();
   Item_services item_services = Item_services();
-  String email;
-  String photourl;
-  Future getUser()async{
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    setState((){
-     name = user.displayName;
-     email = user.email;
-     photourl = user.photoUrl;
-    });
-    print(user.providerData);
-  }
 
   @override
-  void initState() {
+  void initState() { 
     category_services.getCategories().then(
       (value){
         setState(() {
@@ -60,7 +51,7 @@ class _HomePageState extends State<HomePage> {
         productItems = value;
       });
     });
-    getUser();
+   
     super.initState();
       }
 
@@ -122,31 +113,40 @@ class _HomePageState extends State<HomePage> {
 }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: Drawer(
-        child: ListView(
-          primary: true,
-          children: <Widget>[
-            Container(
-              height: 78.0,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [Color(0xFAA80000),Colors.redAccent])
-              ),
-              padding: EdgeInsets.fromLTRB(0.0, 13.0, 0.0, 8.0),
-              child: ListTile(
-                title: Text('Hello,$name',
-                style: GoogleFonts.lato(
-                        textStyle: Theme.of(context).textTheme.display1,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
-                        fontStyle: FontStyle.italic,
-                      ),
+     var user = Provider.of<FirebaseUser>(context);
+        return Scaffold(
+          drawer: Drawer(
+            child: ListView(
+              primary: true,
+              children: <Widget>[
+                Container(
+                  height: 78.0,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [Color(0xFAA80000),Colors.redAccent])
+                  ),
+                  padding: EdgeInsets.fromLTRB(0.0, 13.0, 0.0, 8.0),
+                  child: ListTile(
+                    title: user!=null?Text("Hello "+user.displayName,
+                      style: GoogleFonts.lato(
+                              textStyle: Theme.of(context).textTheme.display1,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w700,
+                              fontStyle: FontStyle.italic,
+                            ),
+                    ):Text("Hello User",
+                      style: GoogleFonts.lato(
+                              textStyle: Theme.of(context).textTheme.display1,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w700,
+                              fontStyle: FontStyle.italic,
+                            ),
                     ),
                     leading:
                         CircleAvatar(
                         radius: 25.0,
                         backgroundColor: Colors.transparent,
-                        backgroundImage: NetworkImage(photourl),
+                        backgroundImage: user!=null?NetworkImage(user.photoUrl??"https://firebasestorage.googleapis.com/v0/b/twelve-ccbd2.appspot.com/o/static%2Fuser.png?alt=media&token=9b70d60d-fbad-4f77-9847-6c97214ba509")
+                         :NetworkImage("https://firebasestorage.googleapis.com/v0/b/twelve-ccbd2.appspot.com/o/static%2Fuser.png?alt=media&token=9b70d60d-fbad-4f77-9847-6c97214ba509"),
                          ),
                        ),
                       ),
