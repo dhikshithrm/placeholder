@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:its12/services/models_Provider.dart';
 
 class UserManagemenent {
   Firestore db = Firestore.instance;
@@ -16,4 +17,10 @@ class UserManagemenent {
     });
     Navigator.of(context).pop();
     }
+      Stream<User> getUserStream(String id){
+        db.collection("users")
+               .document(id)
+               .snapshots()
+               .map((event) {return User.fromMap(event.data);} );
+      }
   }
