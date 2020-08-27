@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:its12/services/models_Provider.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserManagemenent {
   Firestore db = Firestore.instance;
@@ -17,10 +20,10 @@ class UserManagemenent {
     });
     Navigator.of(context).pop();
     }
-      Stream<User> getUserStream(String id){
+      Stream<User> getUserStream(String id,[context]) {
        return db.collection("users")
                .document(id)
                .snapshots()
-               .map((event) => User.fromMap(event.data));
+               .map((event) => User.fromMap(event.data??{'email':'','dp':'','username':Provider.of<FirebaseUser>(context).displayName,'id':''}));
       }
   }
