@@ -38,6 +38,7 @@ class _HomePageState extends State<HomePage> {
   Category_services category_services = Category_services();
   Item_services item_services = Item_services();
   FirebaseUser user;
+  User firestore_user;
   @override
   void initState() { 
     
@@ -117,6 +118,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
      user = Provider.of<FirebaseUser>(context);
+     firestore_user = Provider.of<User>(context);
            return Scaffold(
                     drawer: Drawer(
                       child: ListView(
@@ -129,7 +131,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               padding: EdgeInsets.fromLTRB(0.0, 13.0, 0.0, 8.0),
                               child: ListTile(
-                                title: user!=null?Text("Hello "+user.displayName,
+                                title: firestore_user!=null?Text("Hello "+firestore_user.username,
                           style: GoogleFonts.lato(
                                   textStyle: Theme.of(context).textTheme.display1,
                                   fontSize: 22,
@@ -148,7 +150,7 @@ class _HomePageState extends State<HomePage> {
                             CircleAvatar(
                             radius: 25.0,
                             backgroundColor: Colors.transparent,
-                            backgroundImage: user!=null?NetworkImage(user.photoUrl??"https://firebasestorage.googleapis.com/v0/b/twelve-ccbd2.appspot.com/o/static%2Fuser.png?alt=media&token=9b70d60d-fbad-4f77-9847-6c97214ba509")
+                            backgroundImage: firestore_user!=null?NetworkImage(firestore_user.dp??"https://firebasestorage.googleapis.com/v0/b/twelve-ccbd2.appspot.com/o/static%2Fuser.png?alt=media&token=9b70d60d-fbad-4f77-9847-6c97214ba509")
                              :NetworkImage("https://firebasestorage.googleapis.com/v0/b/twelve-ccbd2.appspot.com/o/static%2Fuser.png?alt=media&token=9b70d60d-fbad-4f77-9847-6c97214ba509"),
                              ),
                            ),

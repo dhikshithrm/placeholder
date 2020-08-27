@@ -18,9 +18,9 @@ class UserManagemenent {
     Navigator.of(context).pop();
     }
       Stream<User> getUserStream(String id){
-        db.collection("users")
+       return db.collection("users")
                .document(id)
                .snapshots()
-               .map((event) {return User.fromMap(event.data);} );
+               .map((event) => User.fromMap(event.data));
       }
   }

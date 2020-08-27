@@ -511,8 +511,6 @@ class ProfilePageState extends State<ProfilePage>
                           _user.updateProfile(update);
                         Firestore.instance.document("users/${_user.uid}").updateData({
                           "username": userName,
-                          "email": userEmail,
-                          "phone": userMobile,
                           });
                         _status = true;
                         FocusScope.of(context).requestFocus(new FocusNode());
