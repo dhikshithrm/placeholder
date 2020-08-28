@@ -181,8 +181,11 @@ class ProfilePageState extends State<ProfilePage>
                                            onTap: () {
                                              setState(() {
                                                photoUrl = null;
-                                              updated =false;
-                                             });
+                                              });
+                                            updated =false;
+                                              UserUpdateInfo deltepic = UserUpdateInfo();
+                                             deltepic.photoUrl = null;
+                                             _user.updateProfile(deltepic);
                                              Navigator.of(context).pop();
                                            },
                                          ),

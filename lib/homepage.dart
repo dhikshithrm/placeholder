@@ -127,36 +127,38 @@ class _HomePageState extends State<HomePage> {
                             initialData: User(user!=null?user.displayName:'',user!=null?user.email:'',user!=null?user.photoUrl:'',user!=null?user.uid:''),
                             value: UserManagemenent().getUserStream(user!=null?user.uid:''),
                               child: Container(
-                                height: 78.0,
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(colors: [Color(0xFAA80000),Colors.redAccent])
-                                ),
-                                padding: EdgeInsets.fromLTRB(0.0, 13.0, 0.0, 8.0),
-                                child: ListTile(
-                                  title: firestore_user!=null?Text("Hello "+firestore_user.username,
-                          style: GoogleFonts.lato(
-                                  textStyle: Theme.of(context).textTheme.display1,
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w700,
-                                  fontStyle: FontStyle.italic,
-                                ),
-                        ):Text("Hello ${user!=null?user.displayName:''}",
-                          style: GoogleFonts.lato(
-                                  textStyle: Theme.of(context).textTheme.display1,
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w700,
-                                  fontStyle: FontStyle.italic,
-                                ),
-                        ),
-                            leading:
-                              CircleAvatar(
-                              radius: 25.0,
-                              backgroundColor: Colors.transparent,
-                              backgroundImage: firestore_user!=null?NetworkImage(firestore_user.dp??"https://firebasestorage.googleapis.com/v0/b/twelve-ccbd2.appspot.com/o/static%2Fuser.png?alt=media&token=9b70d60d-fbad-4f77-9847-6c97214ba509")
-                               :NetworkImage(user!=null?user.photoUrl??"https://firebasestorage.googleapis.com/v0/b/twelve-ccbd2.appspot.com/o/static%2Fuser.png?alt=media&token=9b70d60d-fbad-4f77-9847-6c97214ba509":''),
-                               ),
-                           ),
-                          ),
+                                  height: 78.0,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(colors: [Color(0xFAA80000),Colors.redAccent])
+                                  ),
+                                  padding: EdgeInsets.fromLTRB(0.0, 13.0, 0.0, 8.0),
+                                  child: Consumer<User>(builder: (context, firestore_user, child){
+                                      return ListTile(
+                                                title: firestore_user!=null?Text("Hello "+firestore_user.username,
+                                      style: GoogleFonts.lato(
+                                                textStyle: Theme.of(context).textTheme.display1,
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.w700,
+                                                fontStyle: FontStyle.italic,
+                                              ),
+                                    ):Text("Hello ${user!=null?user.displayName:''}",
+                                      style: GoogleFonts.lato(
+                                                textStyle: Theme.of(context).textTheme.display1,
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.w700,
+                                                fontStyle: FontStyle.italic,
+                                              ),
+                                    ),
+                                        leading:
+                                            CircleAvatar(
+                                            radius: 25.0,
+                                            backgroundColor: Colors.transparent,
+                                            backgroundImage: firestore_user!=null?NetworkImage(firestore_user.dp??"https://firebasestorage.googleapis.com/v0/b/twelve-ccbd2.appspot.com/o/static%2Fuser.png?alt=media&token=9b70d60d-fbad-4f77-9847-6c97214ba509")
+                                            :NetworkImage(user!=null?user.photoUrl??"https://firebasestorage.googleapis.com/v0/b/twelve-ccbd2.appspot.com/o/static%2Fuser.png?alt=media&token=9b70d60d-fbad-4f77-9847-6c97214ba509":''),
+                                            ),
+                                          );
+                                  })
+                              ),
                             ),
                           Container(
                             // decoration: BoxDecoration(
