@@ -103,6 +103,7 @@ class ProfilePageState extends State<ProfilePage>
 
   @override
   void dispose() {
+    imageFile.delete();
     // Clean up the controller when the Widget is disposed
     myFocusNode.dispose();
     super.dispose();

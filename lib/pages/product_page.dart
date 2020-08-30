@@ -8,6 +8,8 @@ import 'package:its12/pages/cart.dart';
 import 'package:its12/items/cart_products.dart';
 import 'package:its12/services/category_services.dart';
 import 'package:its12/services/item_services.dart';
+import 'package:its12/services/models_Provider.dart';
+import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 class ProductDetails extends StatefulWidget {
@@ -207,13 +209,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                 });
               },color: Color(0xFAB30000),),
               IconButton(icon: Icon(widget.like?Icons.favorite:Icons.favorite_border), onPressed: (){
-                var uuid = Uuid();
+                DocumentReference _users = Firestore.instance.collection("users").document(Provider.of<FirebaseUser>(context).uid);
                 setState(() {
                 widget.like = !widget.like;
               });
-               Firestore.instance.collection("wishlist_items").document(uuid.v1())
-               .setData({});
-              },color: Color(0xFAB30000),)
+              
+               }
+              ,color: Color(0xFAB30000),)
             ],
           ),
           Divider(thickness: 2.0,),
