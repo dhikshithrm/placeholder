@@ -11,8 +11,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:its12/items/item_class.dart';
 import 'package:its12/pages/cart.dart';
 import 'package:its12/pages/categoryItemsPage.dart';
-import 'package:its12/pages/profile.dart';
 import 'package:its12/pages/search_page.dart';
+import 'package:its12/pages/profile.dart';
+import 'package:its12/pages/Customer_Service.dart';
 import 'package:its12/services/category_services.dart';
 import 'package:its12/services/item_services.dart';
 
@@ -173,6 +174,11 @@ class _HomePageState extends State<HomePage> {
                                     break;
                                   case "Contact Us":
                                     _launchURL();
+                                    break;
+                                  case "Customer Service":
+                                  Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
+                                    return CustomerServicepage();
+                                  }));
                                 }
                               },
                               title: Text('$e',
@@ -371,7 +377,7 @@ class _HomePageState extends State<HomePage> {
               ),
             );
         }
-       }
+        }
        class Category extends StatelessWidget {
          final mainCategories;
          final int index;
