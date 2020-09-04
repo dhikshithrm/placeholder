@@ -36,6 +36,7 @@ class SearchPage extends StatelessWidget {
                         prod_description: value.documents[0].data['description'],
                         prod_diffVariants: value.documents[0].data['customisable'],
                         prod_category: value.documents[0].data['category'],
+                        prod_id: value.documents[0].data['id'],
                 )));
                 });
                 },

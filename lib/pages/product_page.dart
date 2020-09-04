@@ -9,6 +9,7 @@ import 'package:its12/items/cart_products.dart';
 import 'package:its12/services/category_services.dart';
 import 'package:its12/services/item_services.dart';
 import 'package:its12/services/models_Provider.dart';
+import 'package:its12/services/user_management.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -20,6 +21,7 @@ class ProductDetails extends StatefulWidget {
   final prod_description;
   final prod_category;
   final bool prod_diffVariants;
+  final prod_id;
   bool like = false; 
   List<Map<String,int>> variants;
   List<Map<String,dynamic>> similar_items;
@@ -32,7 +34,7 @@ class ProductDetails extends StatefulWidget {
                   this.prod_old_price,
                   this.prod_description,
                   this.prod_diffVariants,
-                  this.prod_category
+                  this.prod_category, this.prod_id
                   });
 
   @override
@@ -49,6 +51,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   @override
   void initState() {
     getUser();
+    print(widget.prod_id);
     Item_services().getItemWithName(widget.prod_name).then((value){
       setState(() {
         widget.variants = value.documents[0]["diffVariants"];
@@ -191,33 +194,41 @@ class _ProductDetailsState extends State<ProductDetails> {
             ),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              SizedBox(width: 8.0),
-              Expanded(child: MaterialButton(
-                onPressed: (){},
-                color: Color(0xFAB30000),
-                textColor: Colors.white,
-                elevation: 0.2,
-                child: Text("Buy Now"),
+           Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                SizedBox(width: 8.0),
+                Expanded(child: MaterialButton(
+                  onPressed: (){},
+                  color: Color(0xFAB30000),
+                  textColor: Colors.white,
+                  elevation: 0.2,
+                  child: Text("Buy Now"),
+                  ),
                 ),
-              ),
-              IconButton(icon: Icon(Icons.add_shopping_cart), onPressed: (){
-                setState(() {
-                  
+                IconButton(icon: Icon(Icons.add_shopping_cart), onPressed: (){
+                  setState(() {
+                    
+                  });
+                },color: Color(0xFAB30000),),
+                IconButton(icon: Icon(widget.like?Icons.favorite:Icons.favorite_border), onPressed: (){
+                  DocumentReference _users = Firestore.instance.collection("users").document(widget.useruid);
+                  setState(() {
+                  widget.like = !widget.like;
                 });
-              },color: Color(0xFAB30000),),
-              IconButton(icon: Icon(widget.like?Icons.favorite:Icons.favorite_border), onPressed: (){
-                DocumentReference _users = Firestore.instance.collection("users").document(Provider.of<FirebaseUser>(context).uid);
-                setState(() {
-                widget.like = !widget.like;
-              });
-              
-               }
-              ,color: Color(0xFAB30000),)
-            ],
-          ),
+                 if(widget.like){
+                   _users.updateData({
+                     "wishlist": FieldValue.arrayUnion([widget.prod_id])
+                   });
+                 }else{
+                   _users.updateData({
+                     "wishlist": FieldValue.arrayRemove([widget.prod_id])
+                   });
+                 }
+                 }
+                ,color: Color(0xFAB30000),)
+              ],
+            ),
           Divider(thickness: 2.0,),
           Padding(
             padding: const EdgeInsets.all(8.0),

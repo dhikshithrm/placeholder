@@ -372,6 +372,7 @@ class _HomePageState extends State<HomePage> {
                             description: productItems[index]['description'],
                             diffVariants: productItems[index]['customisable'],
                             category: productItems[index]['category'],
+                            pid: productItems[index]['id']
                           );
                         }
                      ),
