@@ -7,7 +7,9 @@ class Cart_products extends StatefulWidget {
   _Cart_productsState createState() => _Cart_productsState();
 }
 
+// ignore: camel_case_types
 class _Cart_productsState extends State<Cart_products> {
+  // ignore: non_constant_identifier_names
   var items_inCart = [{
      "name":"Butterscotch Cake(Eggless)",
      "picture": "assets/Products/cakes2.jpg",
@@ -107,6 +109,7 @@ const Single_Cart_prod({this.cart_prod_name, this.cart_prod_pricture, this.cart_
     );
   }
  }
- void addQuantity(int cart_prod_qnt){
-   cart_prod_qnt++;
+
+ void addQuantity(int cartProdQnt){
+   cartProdQnt++;
  }

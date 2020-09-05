@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:its12/pages/About.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/widgets.dart';
@@ -13,9 +14,11 @@ import 'package:its12/pages/cart.dart';
 import 'package:its12/pages/categoryItemsPage.dart';
 import 'package:its12/pages/search_page.dart';
 import 'package:its12/pages/profile.dart';
+
 import 'package:its12/pages/Customer_Service.dart';
 import 'package:its12/services/category_services.dart';
 import 'package:its12/services/item_services.dart';
+
 
 class HomePage extends StatefulWidget {
   
@@ -179,6 +182,13 @@ class _HomePageState extends State<HomePage> {
                                   Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
                                     return CustomerServicepage();
                                   }));
+                                  break;
+                                  case "About Us":
+                                  Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
+                                    return AboutUspage();
+                                  }));
+                                  break;
+
                                 }
                               },
                               title: Text('$e',
@@ -240,7 +250,7 @@ class _HomePageState extends State<HomePage> {
                       height: 200,
                       child: Carousel(
                         animationCurve: Curves.elasticIn,
-                        autoplay: false,
+                        autoplay: true,
                         overlayShadow: false,
                         dotBgColor: Colors.transparent,
                         indicatorBgPadding: 5.0,
