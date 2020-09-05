@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:its12/pages/wishlist_page.dart';
 import 'package:its12/services/models_Provider.dart';
 import 'package:its12/services/user_management.dart';
 import 'package:provider/provider.dart';
@@ -132,7 +133,7 @@ class _HomePageState extends State<HomePage> {
                                     gradient: LinearGradient(colors: [Color(0xFAA80000),Colors.redAccent])
                                   ),
                                   padding: EdgeInsets.fromLTRB(0.0, 13.0, 0.0, 8.0),
-                                  child: Consumer<User>(builder: (context, firestore_user, child){
+                                  child: Consumer<User>(builder: (context, _, child){
                                       return ListTile(
                                                 title: firestore_user!=null?Text("Hello "+firestore_user.username,
                                       style: GoogleFonts.lato(
@@ -183,6 +184,12 @@ class _HomePageState extends State<HomePage> {
                                         break;
                                       case "Contact Us":
                                         _launchURL();
+                                        break;
+                                      case 'Wishlist':
+                                        Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
+                                          return Wishlist();
+                                        }));
+                                        break;
                                     }
                                   },
                                   title: Text('$e',

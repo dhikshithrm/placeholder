@@ -18,4 +18,7 @@ class Item_services{
               .where('name', isEqualTo: name)
               .getDocuments();
    }
+   Future<Map<String,dynamic>> getItemWithid(String id)async{
+    return await Firestore.instance.document('items/$id').get().then((value) => value.data);
+   }
   }
