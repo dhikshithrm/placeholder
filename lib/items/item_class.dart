@@ -9,9 +9,10 @@ class Singel_prod extends StatelessWidget {
   final price;
   final description;
   final category;
+  final pid;
   final bool diffVariants;
 
-  Singel_prod({this.old_price,this.price,this.prod_name,this.prod_picture,this.description, this.diffVariants, this.category});
+  Singel_prod({this.old_price,this.price,this.prod_name,this.prod_picture,this.description, this.diffVariants, this.category, this.pid});
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -30,6 +31,7 @@ class Singel_prod extends StatelessWidget {
                   prod_description: description,
                   prod_diffVariants: diffVariants,
                   prod_category: category,
+                  prod_id: pid,
               ),)),
               child: GridTile(
               footer: Container(
