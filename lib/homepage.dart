@@ -211,65 +211,13 @@ class _HomePageState extends State<HomePage> {
                           ],
                       )
                       ),
-                      Container(
-                        // decoration: BoxDecoration(
-                        //   image: DecorationImage(image: AssetImage('assets/images/tilebg.jpg'),fit: BoxFit.fitHeight)
-                        // ),
-                        child: Column(
-                         children: tile.map((e) => Padding(
-                           padding: const EdgeInsets.fromLTRB(0.0,4.5,0.0,4.5),
-                           child: ListTile(
-                              onTap: ()async{
-                                switch (e) {
-                                  case "Sign Out":
-                                    googleSignIn.disconnect();
-                                    await FirebaseAuth.instance.signOut().then((value) => 
-                                      Navigator.of(context).pushReplacementNamed('/loginpage')
-                                    );
-                                    break;
-                                  case "Profile":
-                                    Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
-                                      return ProfilePage();
-                                    }));
-                                    break;
-                                  case "Contact Us":
-                                    _launchURL();
-                                    break;
-                                  case "Customer Service":
-                                  Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
-                                    return CustomerServicepage();
-                                  }));
-                                  break;
-                                  case "About Us":
-                                  Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
-                                    return AboutUspage();
-                                  }));
-                                  break;
-
-                                }
-                              },
-                              title: Text('$e',
-                              style: GoogleFonts.cabin(
-                                textStyle: Theme.of(context).textTheme.display1,
-                                fontSize: 20,
-                                // color: Colors.white70,
-                                fontWeight: FontWeight.w500,
-                              )
-                              )
-                             ),
-                           ),
-                         ).toList())
-                        )
-                      ],
-                     )
-                    ),
                     appBar: PreferredSize(
                          preferredSize: Size.fromHeight(60.0),
                          child: AppBar(
                         title: Center(
                           child: Image(image: AssetImage('assets/new.png'),
                           width: 105,
-                          height: 120,
+                          height: 120,)),
                           flexibleSpace: Container(
                             height: 110,
                             width: double.infinity,
@@ -298,8 +246,7 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                       ),
-                    ),
-                body: SingleChildScrollView(
+                    body: SingleChildScrollView(
                       child: Column(
                         children: <Widget>[
                         Container(
@@ -438,11 +385,11 @@ class _HomePageState extends State<HomePage> {
                           );
                         }
                      ),
-                   ),
-               ]
-              ),
-                ),
-        );
+                      ),
+                  ]
+                  ),
+                    ),
+                );
         }
         }
        class Category extends StatelessWidget {
