@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:its12/services/models_Provider.dart';
 import 'package:its12/services/user_management.dart';
 import 'package:provider/provider.dart';
+import 'package:its12/pages/About.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/widgets.dart';
@@ -16,10 +17,13 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:its12/items/item_class.dart';
 import 'package:its12/pages/cart.dart';
 import 'package:its12/pages/categoryItemsPage.dart';
-import 'package:its12/pages/profile.dart';
 import 'package:its12/pages/search_page.dart';
+import 'package:its12/pages/profile.dart';
+
+import 'package:its12/pages/Customer_Service.dart';
 import 'package:its12/services/category_services.dart';
 import 'package:its12/services/item_services.dart';
+
 
 class HomePage extends StatefulWidget {
   
@@ -200,15 +204,65 @@ class _HomePageState extends State<HomePage> {
                           ],
                       )
                       ),
-                      appBar: PreferredSize(
-                           preferredSize: Size.fromHeight(60.0),
-                           child: AppBar(
-                          title: Center(
-                            child: Image(image: AssetImage('assets/new.png'),
-                            width: 105,
-                            height: 120,
-                            ),
-                          ),
+                      Container(
+                        // decoration: BoxDecoration(
+                        //   image: DecorationImage(image: AssetImage('assets/images/tilebg.jpg'),fit: BoxFit.fitHeight)
+                        // ),
+                        child: Column(
+                         children: tile.map((e) => Padding(
+                           padding: const EdgeInsets.fromLTRB(0.0,4.5,0.0,4.5),
+                           child: ListTile(
+                              onTap: ()async{
+                                switch (e) {
+                                  case "Sign Out":
+                                    googleSignIn.disconnect();
+                                    await FirebaseAuth.instance.signOut().then((value) => 
+                                      Navigator.of(context).pushReplacementNamed('/loginpage')
+                                    );
+                                    break;
+                                  case "Profile":
+                                    Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
+                                      return ProfilePage();
+                                    }));
+                                    break;
+                                  case "Contact Us":
+                                    _launchURL();
+                                    break;
+                                  case "Customer Service":
+                                  Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
+                                    return CustomerServicepage();
+                                  }));
+                                  break;
+                                  case "About Us":
+                                  Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
+                                    return AboutUspage();
+                                  }));
+                                  break;
+
+                                }
+                              },
+                              title: Text('$e',
+                              style: GoogleFonts.cabin(
+                                textStyle: Theme.of(context).textTheme.display1,
+                                fontSize: 20,
+                                // color: Colors.white70,
+                                fontWeight: FontWeight.w500,
+                              )
+                              )
+                             ),
+                           ),
+                         ).toList())
+                        )
+                      ],
+                     )
+                    ),
+                    appBar: PreferredSize(
+                         preferredSize: Size.fromHeight(60.0),
+                         child: AppBar(
+                        title: Center(
+                          child: Image(image: AssetImage('assets/new.png'),
+                          width: 105,
+                          height: 120,
                           flexibleSpace: Container(
                             height: 110,
                             width: double.infinity,
@@ -237,6 +291,7 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                       ),
+                    ),
                 body: SingleChildScrollView(
                       child: Column(
                         children: <Widget>[
@@ -382,7 +437,7 @@ class _HomePageState extends State<HomePage> {
                 ),
         );
         }
-       }
+        }
        class Category extends StatelessWidget {
          final mainCategories;
          final int index;
