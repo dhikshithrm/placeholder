@@ -15,9 +15,6 @@ class AboutUspage extends StatefulWidget {
 
 class _AboutUspageState extends State<AboutUspage> {
   
-
-   
-
    @override
    Widget build(BuildContext context){
     return Scaffold( appBar: PreferredSize(
@@ -82,7 +79,7 @@ class _AboutUspageState extends State<AboutUspage> {
       
           
           ]
-                )
+           )
           
             ),
             );

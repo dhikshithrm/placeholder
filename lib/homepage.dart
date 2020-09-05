@@ -194,6 +194,10 @@ class _HomePageState extends State<HomePage> {
                                           return Wishlist();
                                         }));
                                         break;
+                                      case "About Us":
+                                        Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
+                                          return AboutUspage();
+                                        }));
                                     }
                                   },
                                   title: Text('$e',
