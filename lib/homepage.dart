@@ -191,7 +191,7 @@ class _HomePageState extends State<HomePage> {
                                         break;
                                       case 'Wishlist':
                                         Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
-                                          return Wishlist();
+                                          return Wishlist(userId: user.uid,);
                                         }));
                                         break;
                                       case "About Us":

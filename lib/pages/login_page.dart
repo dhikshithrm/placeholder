@@ -23,7 +23,7 @@ class _LoginState extends State<Login> {
   bool loading = false;
   bool isLogedin_wg = false;
   bool isLogedin_r = false;
-
+  
   @override
   void initState() {
     isSignedIn();

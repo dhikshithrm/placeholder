@@ -12,13 +12,16 @@ class Item_services{
              });
       return items;
   }
-  Future<QuerySnapshot> getItemWithName(String name)async{
-   return await Firestore.instance
+  Future<QuerySnapshot> getItemWithName(String name){
+   return  Firestore.instance
               .collection('items')
               .where('name', isEqualTo: name)
               .getDocuments();
    }
-   Future<Map<String,dynamic>> getItemWithid(String id)async{
-    return await Firestore.instance.document('items/$id').get().then((value) => value.data);
+  Future<QuerySnapshot> getWishlistItem(id){
+     return Firestore.instance
+            .collection("items")
+            .where('id', isEqualTo: id)
+            .getDocuments();
    }
   }

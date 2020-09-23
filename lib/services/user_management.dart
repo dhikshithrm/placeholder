@@ -26,4 +26,10 @@ class UserManagemenent {
                .snapshots()
                .map((event) => User.fromMap(event.data??{'email':'','dp':'','username':Provider.of<FirebaseUser>(context).displayName,'id':''}));
       }
-  }
+      Stream<List<String>> getUserWishlist(String id){
+        return db.collection("users")
+                .document(id)
+                .snapshots()
+                .map((event) => event.data['wishlist']);
+      }
+}

@@ -220,10 +220,21 @@ class _ProductDetailsState extends State<ProductDetails> {
                    _users.updateData({
                      "wishlist": FieldValue.arrayUnion([widget.prod_id])
                    });
+                   Firestore.instance.collection('users/${widget.useruid}/wishlist').document(widget.prod_id).setData({
+                     'category': widget.prod_category,
+                     'customisable': widget.prod_diffVariants,
+                     'description': widget.prod_description,
+                     'id': widget.prod_id,
+                     'imageUrl': widget.prod_picture,
+                     'name': widget.prod_name,
+                     'old_price': widget.prod_old_price,
+                     'price': widget.prod_new_price,
+                   });
                  }else{
                    _users.updateData({
                      "wishlist": FieldValue.arrayRemove([widget.prod_id])
                    });
+                   Firestore.instance.collection('users/${widget.prod_id}/wishlist').document(widget.prod_id).delete();
                  }
                  }
                 ,color: Color(0xFAB30000),)

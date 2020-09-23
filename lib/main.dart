@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         StreamProvider<FirebaseUser>.value(value: FirebaseAuth.instance.onAuthStateChanged),
-        StreamProvider<User>.value(value: UserManagemenent().getUserStream(uid))
+        StreamProvider<User>.value(value: UserManagemenent().getUserStream(uid)),
         ],
           child: MaterialApp(
             routes: {
