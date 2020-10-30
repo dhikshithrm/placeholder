@@ -40,7 +40,7 @@ class _AboutUspageState extends State<AboutUspage> {
             padding: const EdgeInsets.all(8.0),
             child: Text('About Us',
             style:TextStyle(
-              fontFamily: 'Montserrat',foreground:Paint()..shader =LinearGradient(colors: [Color(0xFAA80000),Colors.redAccent]).createShader(Rect.fromLTWH(0.0, 0.0, 150.0, 50.0)),fontSize: 30.0,fontWeight: FontWeight.w600,),           ),
+              fontFamily: 'Montserrat',foreground:Paint()..shader =LinearGradient(List: [Color(0xFAA80000),Colors.redAccent]).createShader(Rect.fromLTWH(0.0, 0.0, 150.0, 50.0)),fontSize: 30.0,fontWeight: FontWeight.w600,),           ),
         ),
           
           Padding(

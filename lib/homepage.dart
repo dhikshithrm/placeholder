@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -134,7 +135,11 @@ class _HomePageState extends State<HomePage> {
                               child: Container(
                                   height: 78.0,
                                   decoration: BoxDecoration(
-                                    gradient: LinearGradient(colors: [Color(0xFAA80000),Colors.redAccent])
+                                    gradient: LinearGradient(
+                                      List: [Color(0xffee0000),Colors.redAccent],
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
+                                    )
                                   ),
                                   padding: EdgeInsets.fromLTRB(0.0, 13.0, 0.0, 8.0),
                                   child: Consumer<User>(builder: (context, _, child){
@@ -278,7 +283,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                             Text(' Free \n Delivery \n On \n All \n Products',
-                            style: TextStyle(fontFamily: 'Montserrat',foreground:Paint()..shader = LinearGradient(colors: [Colors.blueAccent[400],Colors.black.withOpacity(0.556)]).createShader(Rect.fromLTWH(0.0, 0.0, 150.0, 50.0)),fontSize: 30.0,fontWeight: FontWeight.w600,),
+                            style: TextStyle(fontFamily: 'Montserrat',foreground:Paint()..shader = LinearGradient(List: [Colors.blueAccent[400],Colors.black.withOpacity(0.556)]).createShader(Rect.fromLTWH(0.0, 0.0, 150.0, 50.0)),fontSize: 30.0,fontWeight: FontWeight.w600,),
                             )
                             ]
                           ),
