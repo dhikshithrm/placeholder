@@ -6,6 +6,8 @@ A Flutter E-Commerce App With All Functionalities
 
   <img src="lib/images/Screenshot_1606631779.png" width="300"> <img src="lib/images/Screenshot_1606631786.png" width="300"> <img src="lib/images/Screenshot_1606631791.png" width="300"> 
    
+   
+   <img src="lib/images/Screenshot_1606643330.png">
   
  
 
