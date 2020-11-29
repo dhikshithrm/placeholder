@@ -3,7 +3,10 @@
 A Flutter E-Commerce App With All Functionalities
 
 ## App Preview
-<img src="lib/images/Screenshot_1606631786.png" width="300">
+<row>
+  <img src="lib/images/Screenshot_1606631786.png" width="300">
+  <img src="lib/images/Screenshot_1606631862.png" width="300">
+ </row>
 
 
 A few resources to get you started if this is your first Flutter project:
