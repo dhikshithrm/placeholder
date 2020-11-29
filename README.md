@@ -1,6 +1,6 @@
 # its12
 
-A new Flutter project.
+A Flutter E-Commerce App With All Functionalities
 
 ## Getting Started
 
