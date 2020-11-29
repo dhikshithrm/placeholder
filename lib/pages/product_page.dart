@@ -12,6 +12,8 @@ import 'package:its12/services/models_Provider.dart';
 import 'package:its12/services/user_management.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+import '../services/user_management.dart';
+
 
 class ProductDetails extends StatefulWidget {
   final prod_name;
@@ -36,7 +38,7 @@ class ProductDetails extends StatefulWidget {
                   this.prod_diffVariants,
                   this.prod_category, this.prod_id
                   });
-
+  Stream<List<String>> wishList;
   @override
   _ProductDetailsState createState() => _ProductDetailsState();
 }
@@ -51,7 +53,9 @@ class _ProductDetailsState extends State<ProductDetails> {
   @override
   void initState() {
     getUser();
-    print(widget.prod_id);
+    
+     
+    
     Item_services().getItemWithName(widget.prod_name).then((value){
       setState(() {
         widget.variants = value.documents[0]["diffVariants"];

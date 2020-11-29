@@ -49,11 +49,10 @@ class _WishlistState extends State<Wishlist> {
         ],
       ),
       body: StreamProvider<List<Map<String,dynamic>>>.value(
-         initialData: [{"name":'dhikshith'}],
          value: getWishlist(),
           child: Container(
            child: Consumer<List<Map<String,dynamic>>>(builder: (context,wishlist,child){
-             return Wishlist_Items(userId: widget.userId,wishlistItems: wishlist,);
+             return Wishlist_Items(userId: widget.userId,wishlistItems: wishlist);
            })
           ),
        ),

@@ -49,7 +49,7 @@ class _CustomerServicepageState extends State<CustomerServicepage> {
             padding: const EdgeInsets.all(8.0),
             child: Text('Customer Service',
             style: TextStyle(
-               fontFamily: 'Montserrat',foreground:Paint()..shader =LinearGradient(List: [Color(0xFAA80000),Colors.redAccent]).createShader(Rect.fromLTWH(0.0, 0.0, 150.0, 50.0)),fontSize: 30.0,fontWeight: FontWeight.w700,),
+               fontFamily: 'Montserrat',fontSize: 30.0,fontWeight: FontWeight.w700,),
             )
             
           ),

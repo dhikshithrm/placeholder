@@ -26,7 +26,7 @@ dependencies:
   flare_flutter:
   carousel_pro:
   firebase_auth: ^0.16.1
-  cloud_firestore: ^0.13.4+2
+  cloud_firestore: ^0.13.0+1
   google_sign_in:
   firebase_database: 
   firebase_storage: 

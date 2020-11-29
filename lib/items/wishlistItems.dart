@@ -14,14 +14,21 @@ class Wishlist_Items extends StatefulWidget {
 
 // ignore: camel_case_types
 class _Wishlist_ItemsState extends State<Wishlist_Items> {
-  
+  @override
+  void initState() {
+    print(widget.wishlistItems);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return ListView.builder(itemBuilder: (context,index){
       return Single_Cart_prod(
         cart_prod_name: widget.wishlistItems[index]['name'],
-        cart_prod_price: widget.wishlistItems[index]['imageUrl'],
-        
+        cart_prod_price: widget.wishlistItems[index]['price'],
+        cart_prod_pricture: widget.wishlistItems[index]['imageUrl'],
+        cart_prod_description: widget.wishlistItems[index]['description'],
+        cart_prod_diffVariants: widget.wishlistItems[index]['customisable'],
+        cart_prod_old_price: widget.wishlistItems[index]['old_price'],
       );
     },itemCount: widget.wishlistItems.length,);
             }}
@@ -31,9 +38,19 @@ class Single_Cart_prod extends StatelessWidget {
   final cart_prod_old_price;
   final cart_prod_price;
   final cart_prod_qnt;
-  final cart_prod_size;
-  final cart_prod_color;
-const Single_Cart_prod({this.cart_prod_name, this.cart_prod_pricture, this.cart_prod_old_price, this.cart_prod_price, this.cart_prod_qnt, this.cart_prod_size, this.cart_prod_color});
+  final cart_prod_description;
+  final cart_prod_diffVariants;
+
+const Single_Cart_prod({
+  this.cart_prod_name,
+  this.cart_prod_pricture, 
+  this.cart_prod_old_price, 
+  this.cart_prod_price, 
+  this.cart_prod_qnt, 
+  this.cart_prod_description,
+  this.cart_prod_diffVariants,
+  
+  });
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -45,6 +62,8 @@ const Single_Cart_prod({this.cart_prod_name, this.cart_prod_pricture, this.cart_
               prod_new_price: cart_prod_price,
               prod_old_price: cart_prod_old_price,
               prod_picture: cart_prod_pricture,
+              prod_description: cart_prod_description,
+              prod_diffVariants: cart_prod_diffVariants,
           )
          )
         );
