@@ -2,9 +2,12 @@
 
 A Flutter E-Commerce App With All Functionalities
 
-## Getting Started
+## App Preview
 
-This project is a starting point for a Flutter application.
+  <img src="lib/images/Screenshot_1606631786.png" width="300"> <img src="lib/images/Screenshot_1606631862.png" width="300">
+  
+ 
+
 
 A few resources to get you started if this is your first Flutter project:
 
