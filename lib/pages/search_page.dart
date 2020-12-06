@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:flappy_search_bar/scaled_tile.dart';
@@ -8,6 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:its12/pages/product_page.dart';
 import 'package:its12/services/item_services.dart';
+
+
 class SearchPage extends StatelessWidget {
   List<Map<String,dynamic>> searchSpace;
   SearchPage({
@@ -24,7 +24,8 @@ class SearchPage extends StatelessWidget {
             padding: EdgeInsets.all(3)
           ),
           hintText: "Search Its12",
-          onSearch: search, onItemFound: (Post post,int index){
+          onSearch: search,
+          onItemFound: (Post post,int index){
               return GestureDetector(
                 onTap: (){
                       Navigator.of(context).push(CupertinoPageRoute(builder: (context){
@@ -41,31 +42,11 @@ class SearchPage extends StatelessWidget {
                               prod_id: snapshot.data.documents[0].data['id'],
                               );
                           } else {
-                            return Scaffold(
-                              body: Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                            );
+                            return CircularIndicator();
                           }
-                          
                         },
                         future: Item_services().getItemWithName(post.title));
                       }));
-                      // Item_services().getItemWithName(post.title).then((value) =>
-                      // Navigator.of(context).push(CupertinoPageRoute(builder: (context){
-                      //  return ProductDetails(
-                      //     prod_name: value.documents[0].data['name'],
-                      //     prod_picture: value.documents[0].data['imageUrl'],
-                      //     prod_new_price: value.documents[0].data['price'],
-                      //     prod_old_price: value.documents[0].data['old_price'],
-                      //     prod_description: value.documents[0].data['description'],
-                      //     prod_diffVariants: value.documents[0].data['customisable'],
-                      //     prod_category: value.documents[0].data['category'],
-                      //     prod_id: value.documents[0].data['id'],
-                      //     );
-                      //   }
-                      // )));
-                      
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -115,4 +96,17 @@ class SearchPage extends StatelessWidget {
 
           Post({this.title, this.subTitle});
           }
-        
+        class CircularIndicator extends StatelessWidget {
+                              @override
+                              Widget build(BuildContext context) {
+                                return Scaffold(
+                                  body: Center(
+                                    child: Container(
+                                      height: 40,
+                                      width: 40,
+                                      child: CircularProgressIndicator(),
+                                      ),
+                                  ),
+                                );
+                              }
+                             }
