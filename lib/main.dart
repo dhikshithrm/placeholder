@@ -18,13 +18,17 @@ class _MyAppState extends State<MyApp> {
 
   FirebaseUser user; 
   String uid;
-  void getUser()async{
-    user = await FirebaseAuth.instance.currentUser();
-    uid = user.uid;
+  Future<FirebaseUser> getUser()async{
+    return await FirebaseAuth.instance.currentUser();
   }
   @override
   void initState() { 
-    getUser();
+    getUser().then((value){
+      setState(() {
+        user = value;
+        uid = user.uid;
+      });
+    });
     super.initState();
     
   }
@@ -44,8 +48,12 @@ class _MyAppState extends State<MyApp> {
             debugShowCheckedModeBanner: false,
             home: SplashScreen(
               "assets/New File 2.flr",
-              user!=null?HomePage():Login(),
+              uid!=null?HomePage():Login(),
+              until: () {
+                getUser();
+              },
               startAnimation: 'its12',
+              
               // transitionsBuilder: 
               ),
       ),

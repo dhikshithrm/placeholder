@@ -27,18 +27,45 @@ class SearchPage extends StatelessWidget {
           onSearch: search, onItemFound: (Post post,int index){
               return GestureDetector(
                 onTap: (){
-                  Item_services().getItemWithName(post.title).then((value){
-                  Navigator.of(context).push(CupertinoPageRoute(builder: (context) => 
-                    ProductDetails(prod_name: value.documents[0].data['name'],
-                        prod_picture: value.documents[0].data['imageUrl'],
-                        prod_new_price: value.documents[0].data['price'],
-                        prod_old_price: value.documents[0].data['old_price'],
-                        prod_description: value.documents[0].data['description'],
-                        prod_diffVariants: value.documents[0].data['customisable'],
-                        prod_category: value.documents[0].data['category'],
-                        prod_id: value.documents[0].data['id'],
-                )));
-                });
+                      Navigator.of(context).push(CupertinoPageRoute(builder: (context){
+                        return FutureBuilder(builder: (context, snapshot){
+                          if (snapshot.connectionState==ConnectionState.done) {
+                            return ProductDetails(
+                              prod_name: snapshot.data.documents[0].data['name'],
+                              prod_picture: snapshot.data.documents[0].data['imageUrl'],
+                              prod_new_price: snapshot.data.documents[0].data['price'],
+                              prod_old_price: snapshot.data.documents[0].data['old_price'],
+                              prod_description: snapshot.data.documents[0].data['description'],
+                              prod_diffVariants: snapshot.data.documents[0].data['customisable'],
+                              prod_category: snapshot.data.documents[0].data['category'],
+                              prod_id: snapshot.data.documents[0].data['id'],
+                              );
+                          } else {
+                            return Scaffold(
+                              body: Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
+                          }
+                          
+                        },
+                        future: Item_services().getItemWithName(post.title));
+                      }));
+                      // Item_services().getItemWithName(post.title).then((value) =>
+                      // Navigator.of(context).push(CupertinoPageRoute(builder: (context){
+                      //  return ProductDetails(
+                      //     prod_name: value.documents[0].data['name'],
+                      //     prod_picture: value.documents[0].data['imageUrl'],
+                      //     prod_new_price: value.documents[0].data['price'],
+                      //     prod_old_price: value.documents[0].data['old_price'],
+                      //     prod_description: value.documents[0].data['description'],
+                      //     prod_diffVariants: value.documents[0].data['customisable'],
+                      //     prod_category: value.documents[0].data['category'],
+                      //     prod_id: value.documents[0].data['id'],
+                      //     );
+                      //   }
+                      // )));
+                      
                 },
                 child: Container(
                   decoration: BoxDecoration(

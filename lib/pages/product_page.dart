@@ -44,18 +44,19 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
-  Future getUser()async{
-    FirebaseAuth.instance.currentUser().then((value){setState(() {
+  List<String> userWishlist;
+  void getUser()async{
+    FirebaseAuth.instance.currentUser().then((value){setState(() async {
+      userWishlist = await UserManagemenent().getUserWishlist(widget.useruid).last;
       widget.useruid = value.uid;
     });});
     
   }
+  
   @override
   void initState() {
     getUser();
-    
-     
-    
+    print(widget.useruid);
     Item_services().getItemWithName(widget.prod_name).then((value){
       setState(() {
         widget.variants = value.documents[0]["diffVariants"];
