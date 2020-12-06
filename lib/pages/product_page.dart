@@ -46,17 +46,24 @@ class ProductDetails extends StatefulWidget {
 class _ProductDetailsState extends State<ProductDetails> {
   List<String> userWishlist;
   void getUser()async{
-    FirebaseAuth.instance.currentUser().then((value){setState(() async {
-      userWishlist = await UserManagemenent().getUserWishlist(widget.useruid).last;
-      widget.useruid = value.uid;
-    });});
-    
+    FirebaseAuth.instance.currentUser().then((value){ 
+      setState(() {
+        widget.useruid = value.uid;
+      });
+      UserManagemenent().getUserWishlist(widget.useruid).last.then((value){
+        setState(() {
+          userWishlist = value;
+          widget.like = userWishlist.contains(widget.prod_id);
+        });
+      }
+      );
+    });
   }
   
   @override
   void initState() {
     getUser();
-    print(widget.useruid);
+    print("hello ${widget.useruid}");
     Item_services().getItemWithName(widget.prod_name).then((value){
       setState(() {
         widget.variants = value.documents[0]["diffVariants"];
@@ -236,10 +243,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                      'price': widget.prod_new_price,
                    });
                  }else{
+                   Firestore.instance.collection('users/${widget.useruid}/wishlist').document(widget.prod_id).delete();
                    _users.updateData({
                      "wishlist": FieldValue.arrayRemove([widget.prod_id])
                    });
-                   Firestore.instance.collection('users/${widget.prod_id}/wishlist').document(widget.prod_id).delete();
+                   
                  }
                  }
                 ,color: Color(0xFAB30000),)

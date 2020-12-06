@@ -6,6 +6,8 @@ import 'package:its12/services/models_Provider.dart';
 import 'package:its12/services/user_management.dart';
 import 'package:provider/provider.dart';
 
+
+
 import '../homepage.dart';
 class Wishlist  extends StatefulWidget {
   String userId;
@@ -23,6 +25,7 @@ class _WishlistState extends State<Wishlist> {
   }
   Stream<List<Map<String,dynamic>>> getWishlist(){
     return Firestore.instance.collection('users/${widget.userId}/wishlist').snapshots().map((event) => event.documents.map((e) => e.data).toList());
+    
   }
   
   Widget build(BuildContext context) {

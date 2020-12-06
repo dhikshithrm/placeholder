@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:its12/pages/product_page.dart';
 import 'package:its12/services/item_services.dart';
 import 'package:its12/services/user_management.dart';
+import 'package:provider/provider.dart';
 
 class Wishlist_Items extends StatefulWidget {
   final String userId;
@@ -23,16 +25,19 @@ class _Wishlist_ItemsState extends State<Wishlist_Items> {
   Widget build(BuildContext context) {
     return ListView.builder(itemBuilder: (context,index){
       return Single_Cart_prod(
+        userId: widget.userId,
         cart_prod_name: widget.wishlistItems[index]['name'],
         cart_prod_price: widget.wishlistItems[index]['price'],
         cart_prod_pricture: widget.wishlistItems[index]['imageUrl'],
         cart_prod_description: widget.wishlistItems[index]['description'],
         cart_prod_diffVariants: widget.wishlistItems[index]['customisable'],
         cart_prod_old_price: widget.wishlistItems[index]['old_price'],
+        cart_prod_id: widget.wishlistItems[index]['id'],
       );
     },itemCount: widget.wishlistItems.length,);
             }}
 class Single_Cart_prod extends StatelessWidget {
+  final String userId;
   final cart_prod_name;
   final cart_prod_pricture;
   final cart_prod_old_price;
@@ -40,6 +45,7 @@ class Single_Cart_prod extends StatelessWidget {
   final cart_prod_qnt;
   final cart_prod_description;
   final cart_prod_diffVariants;
+  final cart_prod_id;
 
 const Single_Cart_prod({
   this.cart_prod_name,
@@ -49,7 +55,8 @@ const Single_Cart_prod({
   this.cart_prod_qnt, 
   this.cart_prod_description,
   this.cart_prod_diffVariants,
-  
+  this.userId,
+  this.cart_prod_id,
   });
   @override
   Widget build(BuildContext context) {
@@ -71,6 +78,13 @@ const Single_Cart_prod({
       title: Text(cart_prod_name,style: TextStyle(
         fontSize: 17.0
       ),),
+      trailing: IconButton(icon: Icon(Icons.delete),onPressed: (){
+        Firestore db = Firestore.instance;
+        db.document('users/${userId}/wishlist/${cart_prod_id}').delete();
+        db.document('users/${userId}').updateData({
+                     "wishlist": FieldValue.arrayRemove([cart_prod_id])
+                   });
+      },),
         subtitle: Column(
           children: <Widget>[
             Row(
