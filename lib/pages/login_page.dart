@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,22 +27,18 @@ class _LoginState extends State<Login> {
   
   @override
   void initState() {
+
     isSignedIn();
         super.initState();
       }
  void isSignedIn() async{
-        setState(() {
-          
-        });
+        
         preferences = await SharedPreferences.getInstance();
-       await firebaseAuth.currentUser().then((user){
-          if(user != null){
-            setState(() {
+        if(FirebaseAuth.instance.currentUser!=null){
+          setState(() {
               isLogedin_r = true;
             });
-          }
-         });
-        
+        } 
         isLogedin_wg = await googleSignIn.isSignedIn();
         if(isLogedin_wg || isLogedin_r){
             Navigator.pushReplacementNamed(context, '/home');
@@ -60,24 +57,24 @@ class _LoginState extends State<Login> {
 
         GoogleSignInAccount googleUser = await googleSignIn.signIn();
         GoogleSignInAuthentication googleSignInAuthentication = await googleUser.authentication;
-        final AuthCredential credential = GoogleAuthProvider.getCredential(idToken: googleSignInAuthentication.idToken, accessToken: googleSignInAuthentication.accessToken);
-        FirebaseUser firebaseUser = (await firebaseAuth.signInWithCredential(credential)).user;
+        final AuthCredential credential = GoogleAuthProvider.credential(idToken: googleSignInAuthentication.idToken, accessToken: googleSignInAuthentication.accessToken);
+        User firebaseUser = (await firebaseAuth.signInWithCredential(credential)).user;
 
         if(firebaseUser != null){
-          final QuerySnapshot result = await Firestore.instance.collection('users').where("id", isEqualTo: firebaseUser.uid).getDocuments();
-          final List<DocumentSnapshot> documents = result.documents;
+          final QuerySnapshot result = await FirebaseFirestore.instance.collection('users').where("id", isEqualTo: firebaseUser.uid).get();
+          final List<DocumentSnapshot> documents = result.docs;
           if(documents.length == 0){
-            Firestore.instance
+            FirebaseFirestore.instance
             .collection('users')
-            .document(firebaseUser.uid)
-            .setData({
+            .doc(firebaseUser.uid)
+            .set({
               "id" : firebaseUser.uid,
               "username" : firebaseUser.displayName,
-              "dp" : firebaseUser.photoUrl
+              "dp" : firebaseUser.photoURL
             });
             await preferences.setString("id", firebaseUser.uid);
             await preferences.setString("username", firebaseUser.displayName);
-            await preferences.setString("photoUrl", firebaseUser.photoUrl);
+            await preferences.setString("photoUrl", firebaseUser.photoURL);
           }else{
             await preferences.setString("id", documents[0]['id']);
             await preferences.setString("username", documents[0]['username']);
@@ -87,7 +84,7 @@ class _LoginState extends State<Login> {
           setState(() {
             loading = false;
           });
-          if(firebaseUser.displayName!=null && firebaseUser.photoUrl!=null){
+          if(firebaseUser.displayName!=null && firebaseUser.photoURL!=null){
             Navigator.of(context).pushReplacementNamed('/home');
           }
         } 

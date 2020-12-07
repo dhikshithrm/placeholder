@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_storage/firebase_storage.dart' as fs;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -20,7 +20,7 @@ class _SignupState extends State<Signup> {
   String _password;
   String _phone;
   String _uploadUrl;
-  StorageReference storageReference;
+  fs.Reference storageReference;
   UserManagemenent _userManagemenent = UserManagemenent();
 
   Future getImage()async{
@@ -40,7 +40,7 @@ class _SignupState extends State<Signup> {
     setState(() {
       image = cropped;
     });
-    storageReference = FirebaseStorage.instance.ref()
+    storageReference = fs.FirebaseStorage.instance.ref()
     .child('users/${Path.basename(image.path)}');
    }
       @override
@@ -114,8 +114,8 @@ class _SignupState extends State<Signup> {
                     elevation: 7.0,
                     onPressed: ()async{
                      if(image!=null){
-                      StorageUploadTask uploadTask = storageReference.putFile(image);
-                        await uploadTask.onComplete;
+                      fs.UploadTask uploadTask = storageReference.putFile(image);
+                        await uploadTask;
                         Fluttertoast.showToast(msg: "Account Created");
                         storageReference.getDownloadURL().then(
                           (fileUrl){
@@ -128,10 +128,7 @@ class _SignupState extends State<Signup> {
                         email: _email,
                         password: _password,
                         ).then((signedInUser){
-                          UserUpdateInfo updateuser =UserUpdateInfo();
-                          updateuser.displayName = _name;
-                          updateuser.photoUrl = _uploadUrl;
-                          signedInUser.user.updateProfile(updateuser);
+                          signedInUser.user.updateProfile(displayName: _name, photoURL: _uploadUrl);
                           _userManagemenent.createUser(
                             context,
                             name: _name,

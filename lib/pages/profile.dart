@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_storage/firebase_storage.dart' as fs;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -21,9 +21,9 @@ class ProfilePageState extends State<ProfilePage>
   String profilePlaceHolder = "https://firebasestorage.googleapis.com/v0/b/twelve-ccbd2.appspot.com/o/static%2Fuser.png?alt=media&token=9b70d60d-fbad-4f77-9847-6c97214ba509";
   bool _status = true;
   final FocusNode myFocusNode = FocusNode();
-  Firestore _db = Firestore.instance;
+  FirebaseFirestore _db = FirebaseFirestore.instance;
   DocumentReference currentUser;
-  StorageReference storageReference;
+  fs.Reference storageReference;
   File imageFile;
   String photoUrl;
   FirebaseUser _user;
@@ -41,22 +41,22 @@ class ProfilePageState extends State<ProfilePage>
   GlobalKey<FormState> _stateKey = GlobalKey<FormState>();
   GlobalKey<FormState> _nameKey = GlobalKey<FormState>();
   void getUser()async{
-    FirebaseUser user= await FirebaseAuth.instance.currentUser().then((value){
+    User user= await FirebaseAuth.instance.currentUser;
     setState(() {
-      _user = value; 
-      photoUrl = value.photoUrl; 
-      userName = value.displayName;
-      userEmail = value.email;
+      _user = user; 
+      photoUrl = user.photoURL; 
+      userName = user.displayName;
+      userEmail = user.email;
     });
-   });
+   
   }
   void getUserAdditionalInfo()async{
     _db.collection('user')
     .where('id',isEqualTo:_user.uid)
-    .getDocuments()
+    .get()
     .then((value){
       setState(() {
-        userMobile = value.documents[0].data['phone'];
+        userMobile = value.docs[0].data()['phone'];
       });
     });
   }
@@ -78,10 +78,10 @@ class ProfilePageState extends State<ProfilePage>
       imageFile = cropped;
       updated =true;
     });
-    storageReference = FirebaseStorage.instance.ref()
+    storageReference = fs.FirebaseStorage.instance.ref()
     .child('users/${Path.basename(imageFile.path)}');
-    StorageUploadTask uploadTask = storageReference.putFile(imageFile);
-    await uploadTask.onComplete;
+    fs.UploadTask uploadTask = storageReference.putFile(imageFile);
+    await uploadTask;
     Fluttertoast.showToast(msg: "Image Updated");
     setState(() {
         imageUpdated = true;
@@ -111,14 +111,14 @@ class ProfilePageState extends State<ProfilePage>
 
   @override
   Widget build(BuildContext context) {
-    User firestore_user = Provider.of<User>(context);
-    return StreamProvider<User>.value(
+    UserC firestore_user = Provider.of<UserC>(context);
+    return StreamProvider<UserC>.value(
           value: UserManagemenent().getUserStream(_user.uid),
-          initialData: User(_user!=null?_user.displayName:'',_user!=null?_user.email:'',_user!=null?_user.photoUrl:'',_user!=null?_user.uid:''),
+          initialData: UserC(_user!=null?_user.displayName:'',_user!=null?_user.email:'',_user!=null?_user.photoUrl:'',_user!=null?_user.uid:''),
           child: new Scaffold(
           body: new Container(
         color: Colors.white,
-        child: Consumer<User>(
+        child: Consumer<UserC>(
           builder: (context,firestore_user,child){
               return new ListView(
             children: <Widget>[
@@ -192,10 +192,9 @@ class ProfilePageState extends State<ProfilePage>
                                                    photoUrl = null;
                                                   });
                                                 updated =false;
-                                                  UserUpdateInfo deltepic = UserUpdateInfo();
-                                                 deltepic.photoUrl = null;
-                                                 _user.updateProfile(deltepic);
-                                                 _db.document("users/${_user.uid}").updateData({"dp":profilePlaceHolder});
+                                                  
+                                                 _user.updateProfile(photoURL: null);
+                                                 _db.doc("users/${_user.uid}").update({"dp":profilePlaceHolder});
                                                  Navigator.of(context).pop();
                                                },
                                              ),
@@ -517,17 +516,13 @@ class ProfilePageState extends State<ProfilePage>
                 color: Colors.green,
                 onPressed: () {
                   if(imageUpdated){
-                      UserUpdateInfo userUpdateInfo = UserUpdateInfo();
-                      userUpdateInfo.photoUrl = _uploadUrl;
-                      _user.updateProfile(userUpdateInfo);
-                      Firestore.instance.document("users/${_user.uid}").updateData({"dp":_uploadUrl});
+                      _user.updateProfile(photoURL: _uploadUrl);
+                      FirebaseFirestore.instance.doc("users/${_user.uid}").update({"dp":_uploadUrl});
                     }
                     if(_nameKey.currentState.validate()){
                       _nameKey.currentState.save();
-                      UserUpdateInfo update = UserUpdateInfo();
-                        update.displayName = userName;
-                          _user.updateProfile(update);
-                        Firestore.instance.document("users/${_user.uid}").updateData({
+                          _user.updateProfile(displayName: userName);
+                        FirebaseFirestore.instance.doc("users/${_user.uid}").update({
                           "username": userName,
                           });
                         _status = true;
@@ -535,7 +530,7 @@ class ProfilePageState extends State<ProfilePage>
                     }
                     
                     if(!(editemail||editname)&&_mobileKey.currentState.validate()){
-                      Firestore.instance.document("users/${_user.uid}").setData({"phone":userMobile});
+                      FirebaseFirestore.instance.doc("users/${_user.uid}").set({"phone":userMobile});
                       _status = true;
                         FocusScope.of(context).requestFocus(new FocusNode());
                     }

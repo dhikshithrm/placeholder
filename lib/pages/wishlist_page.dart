@@ -24,7 +24,7 @@ class _WishlistState extends State<Wishlist> {
     print(widget.userId);
   }
   Stream<List<Map<String,dynamic>>> getWishlist(){
-    return Firestore.instance.collection('users/${widget.userId}/wishlist').snapshots().map((event) => event.documents.map((e) => e.data).toList());
+    return FirebaseFirestore.instance.collection('users/${widget.userId}/wishlist').snapshots().map((event) => event.docs.map((e) => e.data()).toList());
     
   }
   

@@ -30,7 +30,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GoogleSignIn googleSignIn = GoogleSignIn();
-  Firestore db = Firestore.instance;
+  FirebaseFirestore db = FirebaseFirestore.instance;
   FirebaseDatabase _database = FirebaseDatabase.instance;
   int itemlen;
   bool categoryisLoading;
@@ -38,8 +38,8 @@ class _HomePageState extends State<HomePage> {
   List<Map<String, dynamic>> productItems=[];
   Category_services category_services = Category_services();
   Item_services item_services = Item_services();
-  FirebaseUser user;
-  User firestore_user;
+  User user;
+  UserC firestore_user;
   @override
   void initState() { 
     category_services.getCategories().then(
@@ -117,25 +117,25 @@ class _HomePageState extends State<HomePage> {
 }
   @override
   Widget build(BuildContext context) {
-     user = Provider.of<FirebaseUser>(context);
-     firestore_user = Provider.of<User>(context);
+     user = Provider.of<User>(context);
+     firestore_user = Provider.of<UserC>(context);
            return Scaffold(
                     drawer: Drawer(
                       child: ListView(
                           primary: true,
                           children: <Widget>[
-                            StreamProvider<User>.value(
-                            initialData: User(user!=null?user.displayName:'',user!=null?user.email:'',user!=null?user.photoUrl:'',user!=null?user.uid:''),
-                            value: UserManagemenent().getUserStream(user!=null?user.uid:''),
+                            StreamProvider<UserC>.value(
+                            initialData: UserC(user!=null?user.displayName:'its12',user!=null?user.email:'its12@gmail.com',user!=null?user.photoURL:'',user!=null?user.uid:'15AJXxoil8YRIAF3BuvlphiQqul1'),
+                            value: UserManagemenent().getUserStream(user!=null?user.uid:'15AJXxoil8YRIAF3BuvlphiQqul1'),
                               child: Container(
                                   height: 78.0,
                                   decoration: BoxDecoration(
 
                                   ),
                                   padding: EdgeInsets.fromLTRB(0.0, 13.0, 0.0, 8.0),
-                                  child: Consumer<User>(builder: (context, _, child){
+                                  child: Consumer<UserC>(builder: (context, _, child){
                                       return ListTile(
-                                                title: firestore_user!=null?Text("Hello "+firestore_user.username,
+                                                title: firestore_user!=null?Text("Hello "+_.username,
                                       style: GoogleFonts.lato(
                                                 textStyle: Theme.of(context).textTheme.display1,
                                                 fontSize: 22,
@@ -154,8 +154,8 @@ class _HomePageState extends State<HomePage> {
                                             CircleAvatar(
                                             radius: 25.0,
                                             backgroundColor: Colors.transparent,
-                                            backgroundImage: firestore_user!=null?NetworkImage(firestore_user.dp??"https://firebasestorage.googleapis.com/v0/b/twelve-ccbd2.appspot.com/o/static%2Fuser.png?alt=media&token=9b70d60d-fbad-4f77-9847-6c97214ba509")
-                                            :NetworkImage(user!=null?user.photoUrl??"https://firebasestorage.googleapis.com/v0/b/twelve-ccbd2.appspot.com/o/static%2Fuser.png?alt=media&token=9b70d60d-fbad-4f77-9847-6c97214ba509":''),
+                                            backgroundImage: _!=null?NetworkImage(_.dp??"https://firebasestorage.googleapis.com/v0/b/twelve-ccbd2.appspot.com/o/static%2Fuser.png?alt=media&token=9b70d60d-fbad-4f77-9847-6c97214ba509")
+                                            :NetworkImage(user!=null?user.photoURL??"https://firebasestorage.googleapis.com/v0/b/twelve-ccbd2.appspot.com/o/static%2Fuser.png?alt=media&token=9b70d60d-fbad-4f77-9847-6c97214ba509":''),
                                             ),
                                           );
                                   })
@@ -172,10 +172,8 @@ class _HomePageState extends State<HomePage> {
                                   onTap: ()async{
                                     switch (e) {
                                       case "Sign Out":
-                                        googleSignIn.disconnect();
-                                        await FirebaseAuth.instance.signOut().then((value) => 
-                                          Navigator.of(context).pushReplacementNamed('/loginpage')
-                                        );
+                                        await googleSignIn.disconnect();
+                                         FirebaseAuth.instance.signOut().then((value) => Navigator.of(context).pushReplacementNamed('/loginpage'));
                                         break;
                                       case "Profile":
                                         Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){

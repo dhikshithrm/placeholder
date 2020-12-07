@@ -11,11 +11,13 @@ import 'package:its12/services/item_services.dart';
 import 'package:its12/services/models_Provider.dart';
 import 'package:its12/services/user_management.dart';
 import 'package:provider/provider.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:uuid/uuid.dart';
 import '../services/user_management.dart';
 
 
 class ProductDetails extends StatefulWidget {
+  
   final prod_name;
   final prod_new_price;
   final prod_old_price;
@@ -44,11 +46,12 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
+  final razorpay = Razorpay();
   List<String> userWishlist;
   void getUser()async{
-    FirebaseAuth.instance.currentUser().then((value){ 
+    var user = FirebaseAuth.instance.currentUser;
       setState(() {
-        widget.useruid = value.uid;
+        widget.useruid = user.uid;
       });
       UserManagemenent().getUserWishlist(widget.useruid).last.then((value){
         setState(() {
@@ -57,13 +60,15 @@ class _ProductDetailsState extends State<ProductDetails> {
         });
       }
       );
-    });
+    
   }
   
   @override
   void initState() {
     getUser();
-    print("hello ${widget.useruid}");
+    razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, externalWallet);
+    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, paymentSuccess);
+    razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, paymentFailure);
     Item_services().getItemWithName(widget.prod_name).then((value){
       setState(() {
         widget.variants = value.documents[0]["diffVariants"];
@@ -78,6 +83,33 @@ class _ProductDetailsState extends State<ProductDetails> {
     // TODO: implement initState
     super.initState();
   }
+  void externalWallet() {
+          
+          }
+        
+      void paymentSuccess(PaymentSuccessResponse response) {
+          print(response.paymentId.toString());
+           }
+    
+      void paymentFailure(PaymentFailureResponse response) {
+          print(response.message + response.code.toString());
+        }
+
+      getPayment(int amount,String orderName, String orderId, ){
+        var option = {
+          'key': 'rzp_live_0FNc41rv0ThfLL',
+          'amount': amount*100,
+          'name': orderName,
+          'orderId': orderId,
+          'contact': {'contact': '+919515677044','email':'dhikshithreddy12@gmail.com'}
+        };
+        try {
+          razorpay.open(option);
+        } catch (e) {
+          print('error $e');
+        }
+
+      }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -211,7 +243,10 @@ class _ProductDetailsState extends State<ProductDetails> {
               children: <Widget>[
                 SizedBox(width: 8.0),
                 Expanded(child: MaterialButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    var orderId = Uuid().v4();
+                    getPayment(widget.prod_new_price, "its12order"+widget.prod_name, orderId);
+                  },
                   color: Color(0xFAB30000),
                   textColor: Colors.white,
                   elevation: 0.2,
@@ -370,13 +405,13 @@ class Similar_Singel_prod extends StatelessWidget {
           onTap: (){
             Item_services().getItemWithName(this.prod_name).then((value){
               Navigator.of(context).push(CupertinoPageRoute(builder: (context) => 
-                ProductDetails(prod_name: value.documents[0].data['name'],
-                    prod_picture: value.documents[0].data['imageUrl'],
-                    prod_new_price: value.documents[0].data['price'],
-                    prod_old_price: value.documents[0].data['old_price'],
-                    prod_description: value.documents[0].data['description'],
-                    prod_diffVariants: value.documents[0].data['customisable'],
-                    prod_category: value.documents[0].data['category'],
+                ProductDetails(prod_name: value.docs[0].data()['name'],
+                    prod_picture: value.docs[0].data()['imageUrl'],
+                    prod_new_price: value.docs[0].data()['price'],
+                    prod_old_price: value.docs[0].data()['old_price'],
+                    prod_description: value.docs[0].data()['description'],
+                    prod_diffVariants: value.docs[0].data()['customisable'],
+                    prod_category: value.docs[0].data()['category'],
                 )));
                 });
              },

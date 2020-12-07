@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flare_splash_screen/flare_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:its12/homepage.dart';
@@ -7,8 +8,13 @@ import 'package:its12/pages/signup_page.dart';
 import 'package:its12/services/models_Provider.dart';
 import 'package:its12/services/user_management.dart';
 import 'package:provider/provider.dart';
-void main() => runApp(
-   MyApp());
+
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+  }
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
@@ -16,29 +22,30 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-  FirebaseUser user; 
+  User user; 
   String uid;
-  Future<FirebaseUser> getUser()async{
-    return await FirebaseAuth.instance.currentUser();
+  User getUser(){
+   return  FirebaseAuth.instance.currentUser;
   }
   @override
   void initState() { 
-    getUser().then((value){
-      setState(() {
-        user = value;
+    setState(() {
+      user = getUser();
+      try {
         uid = user.uid;
-      });
+      } catch(e){
+        
+      }
     });
     super.initState();
-    
   }
   @override
   Widget build(BuildContext context){
-    return MultiProvider(
-      providers: [
-        StreamProvider<FirebaseUser>.value(value: FirebaseAuth.instance.onAuthStateChanged),
-        StreamProvider<User>.value(value: UserManagemenent().getUserStream(uid)),
-        ],
+      return MultiProvider(
+          providers: [
+            StreamProvider<User>.value(value: FirebaseAuth.instance.authStateChanges()),
+            StreamProvider<UserC>.value(value: UserManagemenent().getUserStream(uid)),
+            ],
           child: MaterialApp(
             routes: {
               '/home': (context) => HomePage(),
@@ -53,11 +60,10 @@ class _MyAppState extends State<MyApp> {
                 getUser();
               },
               startAnimation: 'its12',
-              
-              // transitionsBuilder: 
-              ),
+            ),
       ),
     );
+    
  }
 }
 // add multiprovider in first loggedin widget!
