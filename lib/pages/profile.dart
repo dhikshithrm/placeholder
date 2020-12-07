@@ -26,7 +26,7 @@ class ProfilePageState extends State<ProfilePage>
   fs.Reference storageReference;
   File imageFile;
   String photoUrl;
-  FirebaseUser _user;
+  User _user;
   String userName;
   String userEmail;
   String userMobile;

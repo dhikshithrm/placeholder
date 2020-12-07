@@ -259,15 +259,15 @@ class _ProductDetailsState extends State<ProductDetails> {
                   });
                 },color: Color(0xFAB30000),),
                 IconButton(icon: Icon(widget.like?Icons.favorite:Icons.favorite_border), onPressed: (){
-                  DocumentReference _users = Firestore.instance.collection("users").document(widget.useruid);
+                  DocumentReference _users = FirebaseFirestore.instance.collection("users").doc(widget.useruid);
                   setState(() {
                   widget.like = !widget.like;
                 });
                  if(widget.like){
-                   _users.updateData({
+                   _users.update({
                      "wishlist": FieldValue.arrayUnion([widget.prod_id])
                    });
-                   Firestore.instance.collection('users/${widget.useruid}/wishlist').document(widget.prod_id).setData({
+                   FirebaseFirestore.instance.collection('users/${widget.useruid}/wishlist').doc(widget.prod_id).set({
                      'category': widget.prod_category,
                      'customisable': widget.prod_diffVariants,
                      'description': widget.prod_description,
@@ -278,8 +278,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                      'price': widget.prod_new_price,
                    });
                  }else{
-                   Firestore.instance.collection('users/${widget.useruid}/wishlist').document(widget.prod_id).delete();
-                   _users.updateData({
+                   FirebaseFirestore.instance.collection('users/${widget.useruid}/wishlist').doc(widget.prod_id).delete();
+                   _users.update({
                      "wishlist": FieldValue.arrayRemove([widget.prod_id])
                    });
                    

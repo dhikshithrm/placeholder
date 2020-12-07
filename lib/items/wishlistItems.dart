@@ -79,9 +79,9 @@ const Single_Cart_prod({
         fontSize: 17.0
       ),),
       trailing: IconButton(icon: Icon(Icons.delete),onPressed: (){
-        Firestore db = Firestore.instance;
-        db.document('users/${userId}/wishlist/${cart_prod_id}').delete();
-        db.document('users/${userId}').updateData({
+        FirebaseFirestore db = FirebaseFirestore.instance;
+        db.doc('users/${userId}/wishlist/${cart_prod_id}').delete();
+        db.doc('users/${userId}').update({
                      "wishlist": FieldValue.arrayRemove([cart_prod_id])
                    });
       },),

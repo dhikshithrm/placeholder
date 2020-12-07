@@ -34,7 +34,6 @@ class _HomePageState extends State<HomePage> {
   FirebaseDatabase _database = FirebaseDatabase.instance;
   int itemlen;
   bool categoryisLoading;
-  List<Map<String, dynamic>> categoryItems=[];
   List<Map<String, dynamic>> productItems=[];
   Category_services category_services = Category_services();
   Item_services item_services = Item_services();
@@ -42,13 +41,6 @@ class _HomePageState extends State<HomePage> {
   UserC firestore_user;
   @override
   void initState() { 
-    category_services.getCategories().then(
-      (value){
-        setState(() {
-         categoryItems = value;
-        });
-      }
-      );
     item_services.getItems()
     .then((value){
       setState(() {
@@ -62,7 +54,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() { 
     productItems.clear();
-    categoryItems.clear();
     super.dispose();
   }
 
@@ -162,9 +153,6 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                           Container(
-                            // decoration: BoxDecoration(
-                            //   image: DecorationImage(image: AssetImage('assets/images/tilebg.jpg'),fit: BoxFit.fitHeight)
-                            // ),
                             child: Column(
                              children: tile.map((e) => Padding(
                                padding: const EdgeInsets.fromLTRB(0.0,4.5,0.0,4.5),
@@ -338,23 +326,28 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
               ),
-              categoryItems.length==0?
-              Container(
-                height: 620,
-                child: Center(child: CircularProgressIndicator())
-                )
-              :Container(
-                height: 620,
-                color: Colors.transparent,
+              FutureBuilder(builder: (context, snap){
+                if(snap.connectionState==ConnectionState.done){
+                  return Container(
+                    height: 620,
                    child: GridView.builder(
                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
                      primary: false,
-                    itemCount: categoryItems.length,
+                    itemCount: snap.data.length,
                     itemBuilder: (BuildContext context,index){
-                        return Category(index: index, mainCategories: categoryItems,);
+                        return Category(categoryName:snap.data[index]['category'],categoryImage: snap.data[index]['Images'][0],);
                     },
                     )
-              ),
+                 );
+                }
+                else{
+                  return Container(
+                  height: 620,
+                  child: Center(child: CircularProgressIndicator())
+                  );
+                }
+              },future: category_services.getCategories(),),
+              
               Padding(
                   padding: const EdgeInsets.fromLTRB(12.0,8.0,8.0,12.0),
                   child: Text("They Might Love",
@@ -391,15 +384,16 @@ class _HomePageState extends State<HomePage> {
         }
         }
        class Category extends StatelessWidget {
-         final mainCategories;
-         final int index;
-         const Category({Key key, this.mainCategories, this.index}) : super(key: key);
+         final String categoryImage;
+         final String categoryName;
+         
+         const Category({Key key,  this.categoryImage, this.categoryName}) : super(key: key);
          @override
          Widget build(BuildContext context) {
            return  GestureDetector(
            onTap: () {
              Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
-               return CategoryPage(category: mainCategories[index]["category"]);
+               return CategoryPage(category: categoryName);
              }));
            },
              child: Expanded(
@@ -410,7 +404,7 @@ class _HomePageState extends State<HomePage> {
                    Container(
                    decoration: BoxDecoration(
                      color: Colors.white.withOpacity(0.8),
-                     image: DecorationImage(image: NetworkImage(mainCategories[index]["Images"][0]),fit: BoxFit.cover, ),
+                     image: DecorationImage(image: NetworkImage(categoryImage),fit: BoxFit.cover, ),
                      borderRadius: BorderRadius.circular(10)
                    ),
                  ),
@@ -420,7 +414,7 @@ class _HomePageState extends State<HomePage> {
                      color: Colors.black45
                    ),
                    child: Center(
-                     child: Text(mainCategories[index]['category'],
+                     child: Text(categoryName,
                      textAlign: TextAlign.center,
                      style: TextStyle(
                        color: Colors.white,
