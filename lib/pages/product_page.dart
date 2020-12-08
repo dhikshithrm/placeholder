@@ -97,7 +97,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 
       getPayment(int amount,String orderName, String orderId, ){
         var option = {
-          'key': 'rzp_live_0FNc41rv0ThfLL',
+          'key': 'YOUR_KEY',
           'amount': amount*100,
           'name': orderName,
           'orderId': orderId,
