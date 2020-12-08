@@ -71,8 +71,8 @@ class _ProductDetailsState extends State<ProductDetails> {
     razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, paymentFailure);
     Item_services().getItemWithName(widget.prod_name).then((value){
       setState(() {
-        widget.variants = value.documents[0]["diffVariants"];
-        widget.defVariant = value.documents[0]["defVariant"];
+        widget.variants = value.docs[0]["diffVariants"];
+        widget.defVariant = value.docs[0]["defVariant"];
       });
     });
     Category_services().getItemsWithCategory(widget.prod_category).then((value){
