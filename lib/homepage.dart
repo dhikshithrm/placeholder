@@ -348,26 +348,38 @@ class _HomePageState extends State<HomePage> {
                    ),
                   ),
               ),
-              Container(
+              FutureBuilder(
+                future: item_services.getItems(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if(snapshot.connectionState==ConnectionState.done){
+                   return Container(
                    height: 7*MediaQuery.of(context).size.height,
                    child: GridView.builder(
                      primary: false,
-                     itemCount: productItems.length,
+                     itemCount: snapshot.data.length,
                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
                      itemBuilder: (BuildContext context,index){
                           return Singel_prod(
-                            prod_name: productItems[index]['name'],
-                            prod_picture: productItems[index]['imageUrl'],
-                            old_price: productItems[index]['old_price'],
-                            price: productItems[index]['price'],
-                            description: productItems[index]['description'],
-                            diffVariants: productItems[index]['customisable'],
-                            category: productItems[index]['category'],
-                            pid: productItems[index]['id']
+                            prod_name: snapshot.data[index]['name'],
+                            prod_picture: snapshot.data[index]['imageUrl'],
+                            old_price: snapshot.data[index]['old_price'],
+                            price: snapshot.data[index]['price'],
+                            description: snapshot.data[index]['description'],
+                            diffVariants: snapshot.data[index]['customisable'],
+                            category: snapshot.data[index]['category'],
+                            pid: snapshot.data[index]['id']
                           );
                         }
                      ),
-                      ),
+                      );
+                  }else{
+                    return Container(
+                height: 500,
+                child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                },
+              ),
                   ]
                   ),
                     ),
