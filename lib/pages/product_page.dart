@@ -38,7 +38,8 @@ class ProductDetails extends StatefulWidget {
                   this.prod_old_price,
                   this.prod_description,
                   this.prod_diffVariants,
-                  this.prod_category, this.prod_id
+                  this.prod_category, 
+                  this.prod_id
                   });
   Stream<List<String>> wishList;
   @override
@@ -97,7 +98,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 
       getPayment(int amount,String orderName, String orderId, ){
         var option = {
-          'key': 'YOUR_KEY',
+          'key': 'rzp_live_0FNc41rv0ThfLL',
           'amount': amount*100,
           'name': orderName,
           'orderId': orderId,
@@ -245,7 +246,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 Expanded(child: MaterialButton(
                   onPressed: (){
                     var orderId = Uuid().v4();
-                    getPayment(widget.prod_new_price, "its12order"+widget.prod_name, orderId);
+                    getPayment(widget.prod_new_price, "its12order "+ widget.prod_name, orderId);
                   },
                   color: Color(0xFAB30000),
                   textColor: Colors.white,

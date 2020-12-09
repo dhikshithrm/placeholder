@@ -17,7 +17,7 @@ class _LoginState extends State<Login> {
 
   String _email;
   String _password;
-
+  User firebaseUser;
   final GoogleSignIn googleSignIn = GoogleSignIn();
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   SharedPreferences preferences;
@@ -58,9 +58,12 @@ class _LoginState extends State<Login> {
         GoogleSignInAccount googleUser = await googleSignIn.signIn();
         GoogleSignInAuthentication googleSignInAuthentication = await googleUser.authentication;
         final AuthCredential credential = GoogleAuthProvider.credential(idToken: googleSignInAuthentication.idToken, accessToken: googleSignInAuthentication.accessToken);
-        User firebaseUser = (await firebaseAuth.signInWithCredential(credential)).user;
-
-        if(firebaseUser != null){
+        
+        firebaseAuth.signInWithCredential(credential).then((value) async {
+          setState(() {
+            firebaseUser = value.user;
+          });
+          if(firebaseUser != null){
           final QuerySnapshot result = await FirebaseFirestore.instance.collection('users').where("id", isEqualTo: firebaseUser.uid).get();
           final List<DocumentSnapshot> documents = result.docs;
           if(documents.length == 0){
@@ -91,6 +94,9 @@ class _LoginState extends State<Login> {
         else{
           
         }
+        });
+
+        
       }
       @override
       Widget build(BuildContext context) {

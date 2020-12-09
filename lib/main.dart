@@ -44,7 +44,9 @@ class _MyAppState extends State<MyApp> {
       return MultiProvider(
           providers: [
             StreamProvider<User>.value(value: FirebaseAuth.instance.authStateChanges()),
-            StreamProvider<UserC>.value(value: UserManagemenent().getUserStream(uid)),
+            StreamProvider<UserC>.value(value: UserManagemenent().getUserStream(uid), catchError: (context,user){
+              print(user);
+            },),
             ],
           child: MaterialApp(
             routes: {
@@ -56,9 +58,9 @@ class _MyAppState extends State<MyApp> {
             home: SplashScreen(
               "assets/New File 2.flr",
               uid!=null?HomePage():Login(),
-              until: () {
+              until: (){
                 getUser();
-              },
+                },
               startAnimation: 'its12',
             ),
       ),

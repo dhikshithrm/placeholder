@@ -20,7 +20,7 @@ import 'package:its12/pages/search_page.dart';
 import 'package:its12/pages/profile.dart';
 import 'package:its12/services/category_services.dart';
 import 'package:its12/services/item_services.dart';
-
+import 'pages/shop_by_cat.dart';
 
 class HomePage extends StatefulWidget {
   
@@ -116,6 +116,9 @@ class _HomePageState extends State<HomePage> {
                           primary: true,
                           children: <Widget>[
                             StreamProvider<UserC>.value(
+                              catchError: (context, user){
+                                print(user);
+                              },
                             initialData: UserC(user!=null?user.displayName:'its12',user!=null?user.email:'its12@gmail.com',user!=null?user.photoURL:'',user!=null?user.uid:'15AJXxoil8YRIAF3BuvlphiQqul1'),
                             value: UserManagemenent().getUserStream(user!=null?user.uid:'15AJXxoil8YRIAF3BuvlphiQqul1'),
                               child: Container(
@@ -160,8 +163,8 @@ class _HomePageState extends State<HomePage> {
                                   onTap: ()async{
                                     switch (e) {
                                       case "Sign Out":
-                                        await googleSignIn.disconnect();
                                          FirebaseAuth.instance.signOut().then((value) => Navigator.of(context).pushReplacementNamed('/loginpage'));
+                                         await googleSignIn.disconnect();
                                         break;
                                       case "Profile":
                                         Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
@@ -170,6 +173,11 @@ class _HomePageState extends State<HomePage> {
                                         break;
                                       case "Contact Us":
                                         _launchURL();
+                                        break;
+                                      case "Shop By Category":
+                                          Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
+                                            return ShopByCategory();
+                                          }));
                                         break;
                                       case 'Wishlist':
                                         Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
@@ -305,49 +313,32 @@ class _HomePageState extends State<HomePage> {
               ),
               Padding(
                   padding: const EdgeInsets.fromLTRB(7.3,8.0,7.3,8.0),
-                  child: Container(
-                    width: double.infinity,
-                    height: 50,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.0),
-                        color: Colors.black
-                    ),
-                    child: Center(
-                        child: Padding(padding: EdgeInsets.all(5.0),
-                          child: Text(
-                            "Categories",
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500
+                  child: GestureDetector(
+                      onTap: (){Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
+                          return ShopByCategory();
+                      }));},
+                      child: Container(
+                      width: double.infinity,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5.0),
+                          color: Colors.black
+                      ),
+                      child: Center(
+                          child: Padding(padding: EdgeInsets.all(5.0),
+                            child: Text(
+                              "Categories",
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500
+                              ),
                             ),
                           ),
-                        ),
+                      ),
                     ),
                   ),
               ),
-              FutureBuilder(builder: (context, snap){
-                if(snap.connectionState==ConnectionState.done){
-                  return Container(
-                    height: 620,
-                   child: GridView.builder(
-                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-                     primary: false,
-                    itemCount: snap.data.length,
-                    itemBuilder: (BuildContext context,index){
-                        return Category(categoryName:snap.data[index]['category'],categoryImage: snap.data[index]['Images'][0],);
-                    },
-                    )
-                 );
-                }
-                else{
-                  return Container(
-                  height: 620,
-                  child: Center(child: CircularProgressIndicator())
-                  );
-                }
-              },future: category_services.getCategories(),),
-              
               Padding(
                   padding: const EdgeInsets.fromLTRB(12.0,8.0,8.0,12.0),
                   child: Text("They Might Love",
@@ -358,7 +349,7 @@ class _HomePageState extends State<HomePage> {
                   ),
               ),
               Container(
-                   height: 4200,
+                   height: 7*MediaQuery.of(context).size.height,
                    child: GridView.builder(
                      primary: false,
                      itemCount: productItems.length,
@@ -396,38 +387,39 @@ class _HomePageState extends State<HomePage> {
                return CategoryPage(category: categoryName);
              }));
            },
-             child: Expanded(
-                  child: Padding(
-               padding: const EdgeInsets.all(6.0),
-               child: Stack(
-                children: <Widget>[
-                   Container(
-                   decoration: BoxDecoration(
-                     color: Colors.white.withOpacity(0.8),
-                     image: DecorationImage(image: NetworkImage(categoryImage),fit: BoxFit.cover, ),
-                     borderRadius: BorderRadius.circular(10)
-                   ),
-                 ),
-                 Container(
-                   decoration: BoxDecoration(
-                     borderRadius: BorderRadius.circular(10),
-                     color: Colors.black45
-                   ),
-                   child: Center(
-                     child: Text(categoryName,
-                     textAlign: TextAlign.center,
-                     style: TextStyle(
-                       color: Colors.white,
-                       fontSize: 20,
-                       fontWeight: FontWeight.w800
+               child: Padding(
+                   padding: const EdgeInsets.all(6.0),
+                   child: Container(
+                     child: Stack(
+                       fit: StackFit.expand,
+                       children: <Widget>[
+                         Container(
+                         decoration: BoxDecoration(
+                           color: Colors.white.withOpacity(0.8),
+                           image: DecorationImage(image: NetworkImage(categoryImage),fit: BoxFit.cover, ),
+                           borderRadius: BorderRadius.circular(10)
+                         ),
+                       ),
+                       Container(
+                         decoration: BoxDecoration(
+                           borderRadius: BorderRadius.circular(10),
+                           color: Colors.black45
+                         ),
+                         child: Center(
+                           child: Text(categoryName,
+                           textAlign: TextAlign.center,
+                           style: TextStyle(
+                             color: Colors.white,
+                             fontSize: 20,
+                             fontWeight: FontWeight.w800
+                           ),
+                          ),
+                         )
+                        )
+                       ]
                      ),
-                    ),
-                   )
-                  )
-                 ]
-               ),
-               ),
-             ),
+                   ),
+                   ),
          );
          }
         }

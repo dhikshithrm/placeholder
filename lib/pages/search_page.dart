@@ -32,14 +32,14 @@ class SearchPage extends StatelessWidget {
                         return FutureBuilder(builder: (context, snapshot){
                           if (snapshot.connectionState==ConnectionState.done) {
                             return ProductDetails(
-                              prod_name: snapshot.data.documents[0].data['name'],
-                              prod_picture: snapshot.data.documents[0].data['imageUrl'],
-                              prod_new_price: snapshot.data.documents[0].data['price'],
-                              prod_old_price: snapshot.data.documents[0].data['old_price'],
-                              prod_description: snapshot.data.documents[0].data['description'],
-                              prod_diffVariants: snapshot.data.documents[0].data['customisable'],
-                              prod_category: snapshot.data.documents[0].data['category'],
-                              prod_id: snapshot.data.documents[0].data['id'],
+                              prod_name: snapshot.data.docs[0]['name'],
+                              prod_picture: snapshot.data.docs[0]['imageUrl'],
+                              prod_new_price: snapshot.data.docs[0]['price'],
+                              prod_old_price: snapshot.data.docs[0]['old_price'],
+                              prod_description: snapshot.data.docs[0]['description'],
+                              prod_diffVariants: snapshot.data.docs[0]['customisable'],
+                              prod_category: snapshot.data.docs[0]['category'],
+                              prod_id: snapshot.data.docs[0]['id'],
                               );
                           } else {
                             return CircularIndicator();
