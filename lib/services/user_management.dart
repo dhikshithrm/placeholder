@@ -23,14 +23,12 @@ class UserManagemenent {
     Navigator.of(context).pop();
     }
       Stream<UserC> getUserStream(String id,[context]) {
-        
        return db.collection("users")
                .doc(id)
                .snapshots()
                .map((event) => UserC.fromMap(event.data??{'email':'','dp':'','username':Provider.of<User>(context).displayName,'id':''}));
       }
       Stream<List<String>> getUserWishlist(String id){
-        
         return db.collection("users")
                 .doc(id)
                 .snapshots()

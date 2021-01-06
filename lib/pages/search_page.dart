@@ -24,7 +24,9 @@ class SearchPage extends StatelessWidget {
             padding: EdgeInsets.all(3)
           ),
           hintText: "Search Its12",
-          onSearch: search,
+          onSearch: (text){
+            search(text);
+            },
           onItemFound: (Post post,int index){
               return GestureDetector(
                 onTap: (){

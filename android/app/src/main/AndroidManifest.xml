@@ -1,9 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.its12">
-    <uses-permission android:name="android.permission.INTERNET"/>
+    package="tech.piedpipers.its12">
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="its12"
+        android:label="versat"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
