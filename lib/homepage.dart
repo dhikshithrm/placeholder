@@ -14,7 +14,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:its12/items/item_class.dart';
-import 'package:its12/pages/cart.dart';
 import 'package:its12/pages/categoryItemsPage.dart';
 import 'package:its12/pages/search_page.dart';
 import 'package:its12/pages/profile.dart';
@@ -97,7 +96,7 @@ class _HomePageState extends State<HomePage> {
         );
     }
   _launchURL() async {
-  const url = 'tel://+918688336248';
+  const url = 'tel://+919515677044';
   if (await canLaunch(url)) {
     await launch(url);
   } else {
@@ -164,6 +163,9 @@ class _HomePageState extends State<HomePage> {
                                          FirebaseAuth.instance.signOut().then((value) => Navigator.of(context).pushReplacementNamed('/loginpage'));
                                          await googleSignIn.disconnect();
                                         break;
+                                      case "Your Orders":
+                                          
+                                      break;
                                       case "Profile":
                                         Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
                                           return ProfilePage();
@@ -226,13 +228,7 @@ class _HomePageState extends State<HomePage> {
                                  Navigator.of(context).push(CupertinoPageRoute(builder: (_)=> SearchPage(searchSpace: productItems,)));
                                 }
                                ),
-                             IconButton(
-                               icon: Icon(Icons.shopping_cart,
-                               ),
-                               onPressed: (){
-                                 Navigator.push(context, CupertinoPageRoute(builder: (context)=> Cart()));
-                               }
-                               )
+                             
                           ],
                         ),
                       ),

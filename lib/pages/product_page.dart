@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:its12/homepage.dart';
-import 'package:its12/pages/cart.dart';
 import 'package:its12/items/cart_products.dart';
 import 'package:its12/pages/purchasePage.dart';
 import 'package:its12/services/category_services.dart';
@@ -26,7 +25,7 @@ class ProductDetails extends StatefulWidget {
   final prod_category;
   final bool prod_diffVariants;
   final String prod_id;
-  bool like = null;
+  bool like=false;
   Stream<bool> favoriteStream;  
   List<Map<String,int>> variants;
   List<Map<String,dynamic>> similar_items;
@@ -81,50 +80,11 @@ class _ProductDetailsState extends State<ProductDetails> {
   void initState() {
     
     getUser();
-    razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, externalWallet);
-    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, paymentSuccess);
-    razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, paymentFailure);
-    Item_services().getItemWithName(widget.prod_name).then((value){
-      setState(() {
-        widget.variants = value.docs[0]["diffVariants"];
-        widget.defVariant = value.docs[0]["defVariant"];
-      });
-    });
-    Category_services().getItemsWithCategory(widget.prod_category).then((value){
-      setState(() {
-        widget.similar_items = value;
-      });
-    });
+    
     // TODO: implement initState
     super.initState();
   }
-  void externalWallet() {
-          
-          }
-        
-      void paymentSuccess(PaymentSuccessResponse response) {
-          print(response.paymentId.toString());
-           }
-    
-      void paymentFailure(PaymentFailureResponse response) {
-          print(response.message + response.code.toString());
-        }
-
-      getPayment(int amount,String orderName, String orderId, ){
-        var option = {
-          'key': 'rzp_live_0FNc41rv0ThfLL',
-          'amount': amount*100,
-          'name': orderName,
-          'orderId': orderId,
-          'contact': {'contact': '+919515677044','email':'dhikshithreddy12@gmail.com'}
-        };
-        try {
-          razorpay.open(option);
-        } catch (e) {
-          print('error $e');
-        }
-
-      }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -146,14 +106,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                   ),
                   onPressed: (){}
                 ),
-               IconButton(
-                 icon: Icon(Icons.shopping_cart,
-               color: Colors.white,
-              ),
-            onPressed: (){
-               Navigator.push(context, CupertinoPageRoute(builder: (context)=> Cart()));
-            }
-         )
+        //        IconButton(
+        //          icon: Icon(Icons.shopping_cart,
+        //        color: Colors.white,
+        //       ),
+        //     onPressed: (){
+        //        Navigator.push(context, CupertinoPageRoute(builder: (context)=> Cart()));
+        //     }
+        //  )
         ],
       ),
       body: ListView(
@@ -268,11 +228,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                       imageUrl: widget.prod_picture,
                       name: widget.prod_name,
                       price: widget.prod_new_price
-                      )],);
+                      )],userId: widget.useruid,);
                     }));
-
-                    // var orderId = Uuid().v4();
-                    // getPayment(widget.prod_new_price, "its12order "+ widget.prod_name, orderId);
+                   
                   },
                   color: Color(0xFAB30000),
                   textColor: Colors.white,

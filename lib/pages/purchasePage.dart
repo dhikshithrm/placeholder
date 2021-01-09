@@ -1,32 +1,103 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:its12/pages/myAddresses.dart';
 import 'package:its12/services/models_Provider.dart';
-
-import 'cart.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:uuid/uuid.dart';
 class PurchasePage extends StatefulWidget {
+  String userId;
   List<ProductC> products;
-  PurchasePage({this.products});
+  PurchasePage({this.products,this.userId});
   @override
   _PurchasePageState createState() => _PurchasePageState();
 }
-enum Page{address,order_summary,payment}
 
 class _PurchasePageState extends State<PurchasePage> {
   
   int total=0;
-  Page _selectedPage = Page.order_summary;
+  bool addressComplete=false;
+  String defaultAddName='';
+  final razorpay = Razorpay();
   @override
   void initState() {
+    razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, externalWallet);
+    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, paymentSuccess);
+    razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, paymentFailure);
+    
   widget.products.forEach((element){
     setState(() {
       total+=element.price;
     });
     });
+    FirebaseFirestore.instance.collection("users/${widget.userId}/addresses").get().then((value){
+                                      if(value.docs.length!=0){
+                                        setState(() {
+                                          addressComplete=true;
+                                        });
+                                        value.docs.forEach((element) {
+                                          if(element.data()["isDefault"]==true){
+                                            setState(() {
+                                              defaultAddName = element.data()["add_name"];
+                                            });
+                                          }
+                                        });
+                                        
+                                      }
+                                    });
+                                    print(addressComplete);
     // TODO: implement initState
     super.initState();
   }
+
+  void externalWallet() {
+          
+          }
+        
+      void paymentSuccess(PaymentSuccessResponse response) {
+          var uuid = Uuid().v4();
+          FirebaseFirestore.instance.collection("orders").doc(uuid).set({
+            "status": "payment suceess",
+            "paymentId": response.paymentId,
+            "orderId": uuid,
+            "signature": response.signature, 
+            "userId": widget.userId,
+            "productId": widget.products[0].id,
+            "shipping_address": defaultAddName
+           });
+           Fluttertoast.showToast(msg: "Purchase of ${widget.products[0].name} Success");
+           }
+    
+      void paymentFailure(PaymentFailureResponse response) {
+          var uuid = Uuid().v4(); 
+          FirebaseFirestore.instance.collection("orders").doc(uuid).set({
+            "status": "check out success,payment failed",
+            "userId": widget.userId,
+            "orderId": uuid,
+            "productId": widget.products[0].id,
+            "statusCode": response.code,
+            "message": response.message
+          });
+          Fluttertoast.showToast(msg: "${response.code} Purchase Failed ${response.message}");
+        }
+
+      getPayment(int amount,String orderName, String orderId, ){
+        var option = {
+          'key': 'rzp_live_0FNc41rv0ThfLL',
+          'amount': amount*100,
+          'name': orderName,
+          'orderId': orderId,
+          'contact': {'contact': '+919515677044','email':'dhikshithreddy12@gmail.com'}
+        };
+        try {
+          razorpay.open(option);
+        } catch (e) {
+          print('error $e');
+        }
+
+      }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,14 +121,14 @@ class _PurchasePageState extends State<PurchasePage> {
                    
                   }
                 ),
-               IconButton(
-                 icon: Icon(Icons.shopping_cart,
-               color: Colors.white,
-              ),
-            onPressed: (){
-               Navigator.push(context, CupertinoPageRoute(builder: (context)=> Cart()));
-            }
-         )
+        //        IconButton(
+        //          icon: Icon(Icons.shopping_cart,
+        //        color: Colors.white,
+        //       ),
+        //     onPressed: (){
+        //        Navigator.push(context, CupertinoPageRoute(builder: (context)=> Cart()));
+        //     }
+        //  )
         ],
       ),
       body: Column(
@@ -81,7 +152,7 @@ class _PurchasePageState extends State<PurchasePage> {
                         child: GestureDetector(
                           onTap: (){
                             setState(() {
-                              _selectedPage=Page.address;
+                              
                             });
                           },
                             child: CustomPaint(
@@ -140,12 +211,49 @@ class _PurchasePageState extends State<PurchasePage> {
                                    child: Column(
                                      mainAxisAlignment: MainAxisAlignment.end,
                                      children: [
-                                     Text("this is the address item has to be delivered"),
-                                     
+                                    FutureBuilder(
+                                    future: FirebaseFirestore.instance.collection("users/${widget.userId}/addresses").get(),
+                                    builder: (context, snapshot){
+                                      if(snapshot.connectionState==ConnectionState.done){
+                                        
+                                        return Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                            Container(
+                                          width: double.infinity,
+                                          height: 100,
+                                          child: Column(children: [
+                                            Expanded(
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Text(addressComplete?"${snapshot.data.docs[0].data()["full_name"]}[${snapshot.data.docs[0].data()["add_name"]}] default":"Add Address",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                                                  
+                                                ],
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Text(addressComplete?"${snapshot.data.docs[0].data()["houseNoect"]}, ${snapshot.data.docs[0].data()["city"]}, ${snapshot.data.docs[0].data()["extraDetails"]}, ${snapshot.data.docs[0].data()["pincode"]}":""),
+                                                ),
+                                                Expanded(
+                                                  child: Text(addressComplete?"${snapshot.data.docs[0].data()["phone"]}":""),
+                                                )
+                                              ],),
+                                              ),
+                                            ],
+                                          );
+                                          }
+                                          else{
+                                            return CircularProgressIndicator();
+                                          }
+                                        },
+                                      ),
+                                                              
                                      MaterialButton(
                                        onPressed: (){
                                          Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
-                                            return MyAddresses();
+                                            return MyAddresses(widget.userId,addressComplete: addressComplete,);
                                          }));
                                                   // var orderId = Uuid().v4();
                                                   // getPayment(widget.prod_new_price, "its12order "+ widget.prod_name, orderId);
@@ -206,7 +314,20 @@ class _PurchasePageState extends State<PurchasePage> {
                               title: Text("Total:"),
                               subtitle: Text("₹$total"),
                             ),),
-                            Expanded(child: MaterialButton(onPressed: (){},
+                            Expanded(child: MaterialButton(onPressed: (){
+                              if(addressComplete){
+                                var orderId = Uuid().v4();
+                                FirebaseFirestore.instance.collection("orders").doc(orderId).set({
+                                  "status":"initiated and address added",
+                                  "userId": widget.userId,
+                                  "productIds": widget.products[0].id
+                                }).then((value){
+                                  getPayment(total, widget.products.map((e) => e.name).join(), orderId);
+                                });
+                              }else{
+                                Fluttertoast.showToast(msg: "Add Address");
+                              }
+                            },
                             color: Color(0xFAB30000),
                             child: Text("Check Out",style: TextStyle(color: Colors.white,),),
                             ),  
