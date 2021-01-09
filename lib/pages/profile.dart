@@ -35,11 +35,15 @@ class ProfilePageState extends State<ProfilePage>
   bool editname = false;
   bool editemail = false;
   bool imageUpdated =false;
+  bool editAddress = false;
+  List<String> userAddresses = [];
   GlobalKey<FormState> _emailKey = GlobalKey<FormState>();
   GlobalKey<FormState> _mobileKey = GlobalKey<FormState>();
   GlobalKey<FormState> _pinKey = GlobalKey<FormState>();
   GlobalKey<FormState> _stateKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _addressKey = GlobalKey<FormState>();
   GlobalKey<FormState> _nameKey = GlobalKey<FormState>();
+ TextEditingController _addressController = TextEditingController();
   void getUser()async{
     User user= await FirebaseAuth.instance.currentUser;
     setState(() {
@@ -51,7 +55,7 @@ class ProfilePageState extends State<ProfilePage>
    
   }
   void getUserAdditionalInfo()async{
-    _db.collection('user')
+    _db.collection('users')
     .where('id',isEqualTo:_user.uid)
     .get()
     .then((value){
@@ -114,7 +118,7 @@ class ProfilePageState extends State<ProfilePage>
     UserC firestore_user = Provider.of<UserC>(context);
     return StreamProvider<UserC>.value(
           value: UserManagemenent().getUserStream(_user.uid),
-          initialData: UserC(_user!=null?_user.displayName:'',_user!=null?_user.email:'',_user!=null?_user.photoUrl:'',_user!=null?_user.uid:''),
+          initialData: UserC(_user!=null?_user.displayName:'',_user!=null?_user.email:'',_user!=null?_user.photoUrl:'',_user!=null?_user.uid:'',[""]),
           child: new Scaffold(
           body: new Container(
         color: Colors.white,
@@ -422,66 +426,67 @@ class ProfilePageState extends State<ProfilePage>
                                   ),
                                 ],
                               )),
-                          Padding(
-                              padding: EdgeInsets.only(
-                                  left: 25.0, right: 25.0, top: 25.0),
-                              child: new Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Container(
-                                      child: new Text(
-                                        'Pin Code',
-                                        style: TextStyle(
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    flex: 2,
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      child: new Text(
-                                        'State',
-                                        style: TextStyle(
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    flex: 2,
-                                  ),
-                                ],
-                              )),
-                          Padding(
-                              padding: EdgeInsets.only(
-                                  left: 25.0, right: 25.0, top: 2.0),
-                              child: new Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  Flexible(
+                              !(firestore_user.address==null||editAddress)?
+                              Padding(padding: EdgeInsets.only(
+                                  left: 25.0, right: 25.0, top: 15.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(border: Border.all(width:1.0),borderRadius: BorderRadius.circular(8.0)),
+                                    height: 95,
+                                    width: double.infinity,
                                     child: Padding(
-                                      padding: EdgeInsets.only(right: 10.0),
-                                      child: new TextField(
-                                        keyboardType: TextInputType.number,
-                                        decoration: const InputDecoration(
-                                            hintText: "Enter Pin Code"),
-                                        enabled: !_status,
+                                      padding: const EdgeInsets.only(top: 8,bottom: 8),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                              Row(
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(left:8.0),
+                                                    child: Text("My Addresses",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
+                                                  ),
+                                                  SizedBox(width: 10,),
+                                                  Visibility(child: IconButton(icon: Icon(Icons.edit),onPressed: (){
+                                                    setState(() {
+                                                      editAddress=!editAddress;
+                                                    });
+                                                  },iconSize: 20,),visible: !_status,)
+                                                ],
+                                              ),
+                                           Padding(padding: EdgeInsets.all(8.0),
+                                           child: FutureBuilder(
+                                             future: FirebaseFirestore.instance.doc("users/${_user.uid}").get(),
+                                             builder: (context,snapshot){
+                                               return  Text( snapshot.data['addresses'][0]??"enter address",
+                                              style: TextStyle(
+                                              color: Colors.black45,
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.bold));
+                                             },
+                                           )
+                                           ),
+                                        ],
                                       ),
                                     ),
-                                    flex: 2,
                                   ),
-                                  Flexible(
-                                    child: new TextField(
-                                      decoration: const InputDecoration(
-                                          hintText: "Enter State"),
-                                      enabled: !_status,
-                                    ),
-                                    flex: 2,
-                                  ),
-                                ],
-                              )),
+                                  ):Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 25.0, right: 25.0, top: 2.0),
+                                        child: new Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: <Widget>[
+                                            new Flexible(
+                                              child: Form(
+                                              key: _addressKey,
+                                              child: new TextFormField(
+                                                 controller: _addressController,
+                                                  decoration: const InputDecoration(
+                                                      hintText: "Enter Your Address"),
+                                                  enabled: !_status,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        )),
                           !_status ? _getActionButtons() : new Container(),
                         ],
                       ),
@@ -519,6 +524,10 @@ class ProfilePageState extends State<ProfilePage>
                       _user.updateProfile(photoURL: _uploadUrl);
                       FirebaseFirestore.instance.doc("users/${_user.uid}").update({"dp":_uploadUrl});
                     }
+                    if(editAddress&&_addressController.text!=null&&_addressController.text!=''){
+                      FirebaseFirestore.instance.doc("users/${_user.uid}").update({"addresses":FieldValue.arrayUnion([_addressController.text])});
+                    }
+                    
                     if(_nameKey.currentState.validate()){
                       _nameKey.currentState.save();
                           _user.updateProfile(displayName: userName);
@@ -529,10 +538,12 @@ class ProfilePageState extends State<ProfilePage>
                         FocusScope.of(context).requestFocus(new FocusNode());
                     }
                     
-                    if(!(editemail||editname)&&_mobileKey.currentState.validate()){
-                      FirebaseFirestore.instance.doc("users/${_user.uid}").set({"phone":userMobile});
+                    if(!(editemail||editname)){
+                      if(_mobileKey.currentState.validate()){
+                        FirebaseFirestore.instance.doc("users/${_user.uid}").set({"phone":userMobile});
                       _status = true;
                         FocusScope.of(context).requestFocus(new FocusNode());
+                      }
                     }
                   },
                 shape: new RoundedRectangleBorder(
@@ -554,6 +565,7 @@ class ProfilePageState extends State<ProfilePage>
                     _status = true;
                     editname =false;
                     editemail = false;
+                    editAddress = false;
                     FocusScope.of(context).requestFocus(new FocusNode());
                   });
                 },
@@ -584,6 +596,7 @@ class ProfilePageState extends State<ProfilePage>
           _status = false;
           editname =false;
           editemail = false;
+          editAddress = false;
         });
       },
     );

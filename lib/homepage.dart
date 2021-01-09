@@ -41,19 +41,17 @@ class _HomePageState extends State<HomePage> {
   UserC firestore_user;
   @override
   void initState() { 
-    item_services.getItems()
-    .then((value){
+    item_services.getItems().then((value){
       setState(() {
         productItems = value;
       });
     });
-   
     super.initState();
       }
 
   @override
   void dispose() { 
-    productItems.clear();
+    
     super.dispose();
   }
 
@@ -119,12 +117,12 @@ class _HomePageState extends State<HomePage> {
                               catchError: (context, user){
                                 print(user);
                               },
-                            initialData: UserC(user!=null?user.displayName:'its12',user!=null?user.email:'its12@gmail.com',user!=null?user.photoURL:'',user!=null?user.uid:'15AJXxoil8YRIAF3BuvlphiQqul1'),
+                            initialData: UserC(user!=null?user.displayName:'its12',user!=null?user.email:'its12@gmail.com',user!=null?user.photoURL:'',user!=null?user.uid:'15AJXxoil8YRIAF3BuvlphiQqul1',[""]),
                             value: UserManagemenent().getUserStream(user!=null?user.uid:'15AJXxoil8YRIAF3BuvlphiQqul1'),
                               child: Container(
                                   height: 78.0,
                                   decoration: BoxDecoration(
-
+                                      gradient: LinearGradient(begin: Alignment.centerLeft,end: Alignment.centerRight,colors: [Color.fromRGBO(179,27,27,1),Colors.redAccent],)
                                   ),
                                   padding: EdgeInsets.fromLTRB(0.0, 13.0, 0.0, 8.0),
                                   child: Consumer<UserC>(builder: (context, _, child){
@@ -225,9 +223,7 @@ class _HomePageState extends State<HomePage> {
                                size: 30,
                                ),
                                onPressed: (){
-                                 Navigator.of(context).push(CupertinoPageRoute(builder: (_)=> SearchPage(
-                                   searchSpace: productItems,
-                                 )));
+                                 Navigator.of(context).push(CupertinoPageRoute(builder: (_)=> SearchPage(searchSpace: productItems,)));
                                 }
                                ),
                              IconButton(

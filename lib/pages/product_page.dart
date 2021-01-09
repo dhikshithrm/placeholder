@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:its12/homepage.dart';
 import 'package:its12/pages/cart.dart';
 import 'package:its12/items/cart_products.dart';
+import 'package:its12/pages/purchasePage.dart';
 import 'package:its12/services/category_services.dart';
 import 'package:its12/services/item_services.dart';
 import 'package:its12/services/models_Provider.dart';
@@ -14,7 +15,6 @@ import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:uuid/uuid.dart';
 import '../services/user_management.dart';
-
 
 class ProductDetails extends StatefulWidget {
   
@@ -25,8 +25,9 @@ class ProductDetails extends StatefulWidget {
   final prod_description;
   final prod_category;
   final bool prod_diffVariants;
-  final prod_id;
-  bool like = false; 
+  final String prod_id;
+  bool like = null;
+  Stream<bool> favoriteStream;  
   List<Map<String,int>> variants;
   List<Map<String,dynamic>> similar_items;
   String defVariant;
@@ -39,9 +40,12 @@ class ProductDetails extends StatefulWidget {
                   this.prod_description,
                   this.prod_diffVariants,
                   this.prod_category, 
-                  this.prod_id
+                  this.prod_id,
+                  this.like
                   });
   Stream<List<String>> wishList;
+  
+  
   @override
   _ProductDetailsState createState() => _ProductDetailsState();
 }
@@ -61,11 +65,21 @@ class _ProductDetailsState extends State<ProductDetails> {
         });
       }
       );
+      Item_services().favoritesStream(widget.useruid, widget.prod_id).listen((event) {
+     
+        setState(() {
+        widget.like = event;
+      });
+    
+      
+    });
     
   }
   
+  
   @override
   void initState() {
+    
     getUser();
     razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, externalWallet);
     razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, paymentSuccess);
@@ -217,7 +231,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     ],
                                      ),
                                     ),
-                                    
                                   ],
                                 ),
                               ),
@@ -245,8 +258,21 @@ class _ProductDetailsState extends State<ProductDetails> {
                 SizedBox(width: 8.0),
                 Expanded(child: MaterialButton(
                   onPressed: (){
-                    var orderId = Uuid().v4();
-                    getPayment(widget.prod_new_price, "its12order "+ widget.prod_name, orderId);
+                    Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context){
+                      return PurchasePage(products: [
+                        ProductC(widget.prod_old_price,
+                      widget.prod_diffVariants,[],
+                      id: widget.prod_id,
+                      categories: widget.prod_category,
+                      description: widget.prod_description,
+                      imageUrl: widget.prod_picture,
+                      name: widget.prod_name,
+                      price: widget.prod_new_price
+                      )],);
+                    }));
+
+                    // var orderId = Uuid().v4();
+                    // getPayment(widget.prod_new_price, "its12order "+ widget.prod_name, orderId);
                   },
                   color: Color(0xFAB30000),
                   textColor: Colors.white,
@@ -260,10 +286,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                   });
                 },color: Color(0xFAB30000),),
                 IconButton(icon: Icon(widget.like?Icons.favorite:Icons.favorite_border), onPressed: (){
+                  
                   DocumentReference _users = FirebaseFirestore.instance.collection("users").doc(widget.useruid);
                   setState(() {
-                  widget.like = !widget.like;
-                });
+                    widget.like = !widget.like;
+                    
+                    
+                  });
                  if(widget.like){
                    _users.update({
                      "wishlist": FieldValue.arrayUnion([widget.prod_id])

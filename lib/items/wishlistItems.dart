@@ -65,6 +65,7 @@ const Single_Cart_prod({
         leading: Image.network(cart_prod_pricture),
         onTap: (){Navigator.of(context).pushReplacement(CupertinoPageRoute(
          builder: (context)=> ProductDetails(
+              prod_id: cart_prod_id,
               prod_name: cart_prod_name,
               prod_new_price: cart_prod_price,
               prod_old_price: cart_prod_old_price,

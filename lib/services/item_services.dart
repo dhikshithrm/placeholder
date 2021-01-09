@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 
 class Item_services{
   Future<List<Map<String,dynamic>>> getItems()async{
@@ -28,4 +29,12 @@ class Item_services{
             .where('id', isEqualTo: id)
             .get();
    }
+ Stream<bool> favoritesStream(String userId,String productId){
+        return FirebaseFirestore.instance
+           .collection("users").doc(userId)
+           .get().asStream().map((event)=> event.data()["wishlist"].contains(productId));
+
+  }
+
+
   }

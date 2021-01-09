@@ -26,7 +26,7 @@ class UserManagemenent {
        return db.collection("users")
                .doc(id)
                .snapshots()
-               .map((event) => UserC.fromMap(event.data??{'email':'','dp':'','username':Provider.of<User>(context).displayName,'id':''}));
+               .map((event) => UserC.fromMap(event.data??{'email':'','dp':'','username':Provider.of<User>(context).displayName,'id':'','addresses':[]}));
       }
       Stream<List<String>> getUserWishlist(String id){
         return db.collection("users")

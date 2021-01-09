@@ -24,9 +24,7 @@ class SearchPage extends StatelessWidget {
             padding: EdgeInsets.all(3)
           ),
           hintText: "Search Its12",
-          onSearch: (text){
-            search(text);
-            },
+          onSearch: search,
           onItemFound: (Post post,int index){
               return GestureDetector(
                 onTap: (){
@@ -82,6 +80,7 @@ class SearchPage extends StatelessWidget {
                     );
                   }
           Future<List<Post>> search(String text) async{
+            print(searchSpace.length);
             List<Post> suggestions = [];
             searchSpace.forEach((e) {
              if(e["name"].toLowerCase().contains(text.toLowerCase())){

@@ -26,7 +26,7 @@ class ShopByCategory extends StatelessWidget {
                           ],
                         ),
                       ),
-       body: Container(
+       body: SingleChildScrollView(
          child: 
           Column(
             children: [
@@ -56,7 +56,7 @@ class ShopByCategory extends StatelessWidget {
               FutureBuilder(builder: (context, snap){
                     if(snap.connectionState==ConnectionState.done){
                       return Container(
-                        height: 620,
+                        height: 650,
                        child: GridView.builder(
                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
                          primary: false,
@@ -77,7 +77,7 @@ class ShopByCategory extends StatelessWidget {
             ],
           ),
               
-        height: 1000),
+        ),
     );
   }
  }
